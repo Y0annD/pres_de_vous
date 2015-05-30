@@ -1,7 +1,7 @@
 {
 
   // Java verticle
-  //"main":"GroovyPingVerticle",
+  "main": "com.cai.pres_de_vous.EntryPoint",
 
   // In this example we also provide various other versions of the main verticle, you can uncomment this and
   // play around:
@@ -10,7 +10,7 @@
   //"main":"JavaSourcePingVerticle.java",
 
   // Compiled Groovy verticle - note that they must be prefixed with 'groovy:' to distinguish them from compiled Java verticles
-  "main":"groovy:com.cai.pres_de_vous.Main",
+  //"main":"groovy:com.cai.pres_de_vous.Main",
 
   // Groovy *script* verticle
   //"main": "GroovyVerticle.groovy",
@@ -27,9 +27,8 @@
 
   // If your module is going to be registered in the Vert.x module registry you will also need the following
   // mandatory fields
-  "description":"Put description of your module here",
-  "licenses": ["The Apache Software License Version 2.0"],
-  "author": "Joe Bloggs",
+  "description":"near to you pictures",
+  "author": "Yoann Diquélou, Mathieu Allain, Florent Le Prince",
 
   // Optional fields
   "developers": ["Other Dev 1", "Other Dev 2"],
