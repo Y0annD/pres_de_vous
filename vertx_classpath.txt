@@ -1,7 +1,0 @@
-src/main/resources
-bin
-out/production/pres_de_vous
-out/test/pres_de_vous
-build/deps
-build/classes/main
-build/resources/main

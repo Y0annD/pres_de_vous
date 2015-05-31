@@ -55,10 +55,10 @@ dependencies {
   provided "org.codehaus.groovy:groovy-all:$groovyVersion"
   provided "io.vertx:lang-groovy:$groovyLangModVersion@jar"
 
-  // If you're creating Scala compiled verticles you may need the following dependencies
-  provided "org.scala-lang:scala-library:$scalaVersion"
-  provided "io.vertx:lang-scala:$scalaLangModVersion@jar"
+  compile 'org.mongodb:mongo-java-driver:2.12.4'
 
+
+  compile 'com.google.inject:guice:3.0'
 
 }
 

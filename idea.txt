@@ -1,5 +1,0 @@
-Techno:
-  Vert.X
-  Polymer
-
-http://io2014codelabs.appspot.com/static/codelabs/polymer-build-maps/#5
