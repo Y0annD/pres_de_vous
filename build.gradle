@@ -59,6 +59,8 @@ dependencies {
   provided "org.scala-lang:scala-library:$scalaVersion"
   provided "io.vertx:lang-scala:$scalaLangModVersion@jar"
 
+  compile 'com.google.inject:guice:3.0'
+
 
 }
 

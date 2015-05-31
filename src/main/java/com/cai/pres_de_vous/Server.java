@@ -7,6 +7,7 @@ import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
 /**
@@ -36,7 +37,8 @@ public class Server extends Verticle {
                     eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
-                            event.response().end(eventBusResponse.body());
+                            JsonObject obj = new JsonObject(eventBusResponse.body());
+                            event.response().end(obj.getArray("data").toString());
                         }
                     });
                     /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {

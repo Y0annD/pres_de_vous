@@ -31,7 +31,6 @@ public class APIWorker extends Verticle {
                         case "beers":
                             response = "Cool";
                             break;
-
                         //other beers
                         default:
                             response ="Pas cool";
@@ -41,16 +40,26 @@ public class APIWorker extends Verticle {
                     exp.printStackTrace();
                 }
                 */
-                String link = "/v1/locations/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
+                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
+                link = "/v1/media/search?lat=48.334156&lng=-4.418471&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
                 System.out.println("link: "+link);
                 vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com").getNow(link, new Handler<HttpClientResponse>() {
+
+                    Buffer body = new Buffer(0);
                     public void handle(HttpClientResponse response) {
                         response.dataHandler(new Handler<Buffer>() {
                             public void handle(Buffer data) {
                                 //System.out.println(data);
-                                JsonObject rep = new JsonObject(data.toString());
+                                //JsonObject rep = new JsonObject(data.toString());
+                                body.appendBuffer(data);
+                                //message.reply(data.toString());
+                            }
+                        });
 
-                                message.reply(rep.getArray("data").toString());
+                        response.endHandler(new Handler<Void>() {
+                            @Override
+                            public void handle(Void event) {
+                                message.reply(body.toString());
                             }
                         });
                     }

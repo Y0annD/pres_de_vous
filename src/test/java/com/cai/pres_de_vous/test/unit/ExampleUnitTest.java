@@ -1,6 +1,6 @@
 package com.cai.pres_de_vous.test.unit;
 
-import com.cai.pres_de_vous.Main;
+import com.cai.pres_de_vous.EntryPoint;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -26,7 +26,7 @@ public class ExampleUnitTest {
 
   @Test
   public void testVerticle() {
-    Main vert = new Main();
+    EntryPoint vert = new EntryPoint();
 
     // Interrogate your classes directly....
 
