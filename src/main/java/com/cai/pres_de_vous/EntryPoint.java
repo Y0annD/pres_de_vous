@@ -11,7 +11,7 @@ public class EntryPoint extends Verticle {
     public void start() {
         super.start();
 
-        container.deployWorkerVerticle("com.cai.pres_de_vous.instagram.APIWorker",4);
+        container.deployWorkerVerticle("com.cai.pres_de_vous.instagram.APIWorker",1);
 
         container.deployVerticle("com.cai.pres_de_vous.Server", container.config());
     }

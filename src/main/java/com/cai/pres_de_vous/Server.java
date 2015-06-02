@@ -22,7 +22,7 @@ public class Server extends Verticle {
         System.out.println("Deploy Server");
 
         final EventBus eb = vertx.eventBus();
-        eb.setDefaultReplyTimeout(5000);
+        eb.setDefaultReplyTimeout(25000);
 
         RouteMatcher routeMatcher = new RouteMatcher();
 
