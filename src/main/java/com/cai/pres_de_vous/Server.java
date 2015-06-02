@@ -15,6 +15,7 @@ import org.vertx.java.platform.Verticle;
  */
 public class Server extends Verticle {
 
+
     @Override
     public void start() {
         super.start();
@@ -71,6 +72,18 @@ public class Server extends Verticle {
                     event.response().end("Invalid position");
                 }
 
+            }
+        });
+
+        routeMatcher.get("/mongo", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(final HttpServerRequest req) {
+                eb.send("mongo.service", new JsonObject(), new Handler<Message<String>>() {
+                    @Override
+                    public void handle(Message<String> eventBusResponse) {
+                        req.response().end(eventBusResponse.body());
+                    }
+                });
             }
         });
 

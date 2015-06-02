@@ -1,4 +1,4 @@
-package com.cai.pres_de_vous.mondgod;
+package com.cai.pres_de_vous.mongod;
 
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -31,12 +31,6 @@ public class DBHelper extends Verticle {
                         .putObject("matcher", matcher);
 
 
-                eb.send("mongo-persistor", json, new Handler<Message<JsonObject>>() {
-                    @Override
-                    public void handle(Message<JsonObject> event) {
-                        request.reply(event.body().encodePrettily());
-                    }
-                });
 
             }
         };
