@@ -7,6 +7,7 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.platform.Verticle;
 
 /**
@@ -39,7 +40,6 @@ public class APIWorkerGoogle extends Verticle {
                     public void handle(HttpClientResponse response) {
                         response.dataHandler(new Handler<Buffer>() {
                             public void handle(Buffer data) {
-                                System.out.println("Blah");
                                 body.appendBuffer(data);
                             }
                         });
@@ -47,16 +47,48 @@ public class APIWorkerGoogle extends Verticle {
                         response.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
+                                JsonObject obj = new JsonObject(body.toString());
+                                JsonArray refPhotos = listReferencesPhotos(obj);
+                                JsonArray photos = listPhotos(refPhotos);
+
                                 message.reply(body.toString());
                             }
                         });
                     }
                 });
-                // Now reply to it
-                //message.reply(response);
             }
         };
 
         eb.registerHandler("google.service", apiHandler);
+    }
+
+    public JsonArray listReferencesPhotos(JsonObject obj){
+        JsonArray listeReferences = new JsonArray();
+        JsonArray results = obj.getArray("results");    // On récupère la liste des lieux autours de nous
+        for(int i=0; i < results.size(); i++){
+            JsonObject result = results.get(i);
+            JsonArray photos = result.getArray("photos");   // Pour chaque lieu on récupère la liste des photos associées si elles exitent
+            if(photos != null){
+                for(int j=0; j < photos.size(); j++){
+                    JsonObject photo = photos.get(j);
+                    String reference = photo.getString("photo_reference");  // Pour chaque photo on récupère sa référence
+                    if(reference != null){
+                        listeReferences.addObject(photo);
+                        // container.logger().info(reference);
+                    }
+                }
+            }
+        }
+        container.logger().info(listeReferences);
+        return listeReferences;
+    }
+
+    public JsonArray listPhotos(JsonArray obj){
+        JsonArray photos = new JsonArray();
+        for(int i=0; i<obj.size(); i++){
+            container.logger().info(obj.get(i).toString());
+            //ring link = "/maps/api/place/photo?maxwidth=400&photoreference="++"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+        }
+        return photos;
     }
 }

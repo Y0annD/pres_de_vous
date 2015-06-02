@@ -20,3 +20,4 @@ test-tmp
 *.ipr
 *.iws
 mods
+vertx_classpath.txt
