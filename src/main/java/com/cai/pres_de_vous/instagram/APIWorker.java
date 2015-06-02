@@ -29,7 +29,6 @@ public class APIWorker extends Verticle {
             public void handle(final Message<JsonObject> message) {
 
                 String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
-                link = "/v1/media/search?lat=48.3587663&lng=-4.5548653&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
                 System.out.println("link: "+link);
                 HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
 
