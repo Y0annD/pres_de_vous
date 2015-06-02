@@ -11,8 +11,8 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
 /**
- * Created by crocus on 30/05/15.
- */
+ * Server which serve static files and routes
+ **/
 public class Server extends Verticle {
 
 
@@ -23,7 +23,7 @@ public class Server extends Verticle {
         System.out.println("Deploy Server");
 
         final EventBus eb = vertx.eventBus();
-        eb.setDefaultReplyTimeout(25000);
+        eb.setDefaultReplyTimeout(5000);
 
         RouteMatcher routeMatcher = new RouteMatcher();
 
@@ -38,7 +38,7 @@ public class Server extends Verticle {
                     eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
-                            event.response().end(eventBusResponse.body().toString());
+                            event.response().end(eventBusResponse.body());
                         }
                     });
                     /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {
@@ -78,10 +78,15 @@ public class Server extends Verticle {
         routeMatcher.get("/mongo", new Handler<HttpServerRequest>() {
             @Override
             public void handle(final HttpServerRequest req) {
-                eb.send("mongo.service", new JsonObject(), new Handler<Message<String>>() {
+                JsonObject usr = new JsonObject();
+                usr.putString("action","SIGN UP");
+                usr.putString("firstname","Yoann");
+                usr.putString("lastname","Diquélou");
+                usr.putString("password","bidon");
+                eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
                     @Override
-                    public void handle(Message<String> eventBusResponse) {
-                        req.response().end(eventBusResponse.body());
+                    public void handle(Message<JsonObject> event) {
+                        req.response().end(event.body().encodePrettily());
                     }
                 });
             }
