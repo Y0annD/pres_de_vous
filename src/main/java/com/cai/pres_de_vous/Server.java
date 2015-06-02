@@ -37,8 +37,7 @@ public class Server extends Verticle {
                     eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
-                            JsonObject obj = new JsonObject(eventBusResponse.body());
-                            event.response().end(obj.getArray("data").toString());
+                            event.response().end(eventBusResponse.body().toString());
                         }
                     });
                     /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {
@@ -68,12 +67,6 @@ public class Server extends Verticle {
                             event.response().end(eventBusResponse.body());
                         }
                     });
-                    /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {
-                        public void handle(Message<String> eventBusResponse) {
-                            //System.out.println("Yeah the response is " + eventBusResponse.body());
-                            event.response().end(eventBusResponse.body());
-                        }
-                    });*/
                 }else{
                     event.response().end("Invalid position");
                 }
