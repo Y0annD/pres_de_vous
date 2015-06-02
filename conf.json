@@ -1,5 +1,9 @@
-// Example JSON config file
-
 {
-  "foo": "bar"
+  "mongo-persistor" : {
+    "address": "mongodb-persistor",
+    "host": "localhost",
+    "port": 27017,
+    "pool_size": 10,
+    "db_name": "vertx"
+  }
 }
