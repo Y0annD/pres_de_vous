@@ -4,6 +4,7 @@ package com.cai.pres_de_vous.utils;
 import org.vertx.java.core.json.JsonObject;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * User class
@@ -19,6 +20,7 @@ public class User {
     private String insta_key;
     private String google_key;
     private String token;
+    // unused because i don't want to complexify this short project
     private long validity;
 
     public String getToken() {
@@ -43,6 +45,9 @@ public class User {
         return false;
     }
 
+    public void setNewValidity(){
+
+    }
 
     public User(String firstName, String lastName, String encryptedPassword){
         firstname = firstName;
@@ -90,6 +95,12 @@ public class User {
         this.google_key = google_key;
     }
 
+    public void setToken(){
+        token = UUID.randomUUID().toString();
+        /*Date d = new Date();
+        validity = d.getTime()+TOKEN_VALIDITY;*/
+    }
+
 
     /**
      *
@@ -97,9 +108,9 @@ public class User {
      */
     public JsonObject registerUserRequest(){
         // get date to set token duration
-        Date d = new Date();
-        validity = d.getTime()+TOKEN_VALIDITY;
-
+        //Date d = new Date();
+        //validity = d.getTime()+TOKEN_VALIDITY;
+        setToken();
         // create request object
         JsonObject req = new JsonObject();
         req.putString("action","save");
@@ -121,15 +132,54 @@ public class User {
         user.putString("insta_key",insta_key);
         user.putString("google_key",google_key);
         user.putString("token",token);
-        user.putString("token_validity",validity+"");
+        //user.putString("token_validity",validity+"");
         return user;
     }
 
+    /**
+     * Create MongoDB request to find wether user exist or not
+     * @return: JSonObject mongodb request
+     */
     public JsonObject findRequest(){
         JsonObject req = new JsonObject();
         JsonObject usr = new JsonObject();
         usr.putString("firstName",firstname);
         usr.putString("lastName",lastname);
+        req.putString("action","find");
+        req.putString("collection","users");
+        req.putObject("matcher",usr);
+        return req;
+    }
+
+    /**
+     * set token for user in mongo DB
+     * @return: JSOn request for mongo db
+     */
+    public JsonObject setTokenRequest(){
+        JsonObject req = new JsonObject();
+        JsonObject usr = new JsonObject();
+        usr.putString("firstName",firstname);
+        usr.putString("lastName",lastname);
+        req.putString("action","update");
+        req.putString("collection","users");
+        req.putObject("Criteria", usr);
+        JsonObject n = new JsonObject("{'token':'"+token+"'}");
+        req.putObject("$set",n);
+        return req;
+    }
+
+
+    /**
+     * Create MongoDB request to find wether user can login or not
+     * @return
+     */
+    public JsonObject sign_in(){
+        JsonObject req = new JsonObject();
+        JsonObject usr = new JsonObject();
+        setToken();
+        usr.putString("firstName",firstname);
+        usr.putString("lastName",lastname);
+        usr.putString("password",encrypted_password);
         req.putString("action","find");
         req.putString("collection","users");
         req.putObject("matcher",usr);

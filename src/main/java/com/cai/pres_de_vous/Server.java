@@ -75,11 +75,12 @@ public class Server extends Verticle {
             }
         });
 
-        routeMatcher.get("/mongo", new Handler<HttpServerRequest>() {
+        routeMatcher.get("/mongo/:action", new Handler<HttpServerRequest>() {
             @Override
             public void handle(final HttpServerRequest req) {
                 JsonObject usr = new JsonObject();
-                usr.putString("action","SIGN UP");
+                container.logger().info(req.params().get("action"));
+                usr.putString("action",req.params().get("action"));
                 usr.putString("firstname","Yoann");
                 usr.putString("lastname","Diquélou");
                 usr.putString("password","bidon");
