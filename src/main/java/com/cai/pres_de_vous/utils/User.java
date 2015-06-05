@@ -176,7 +176,7 @@ public class User {
     public JsonObject sign_in(){
         JsonObject req = new JsonObject();
         JsonObject usr = new JsonObject();
-        setToken();
+        //setToken();
         usr.putString("firstName",firstname);
         usr.putString("lastName",lastname);
         usr.putString("password",encrypted_password);

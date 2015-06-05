@@ -23,7 +23,7 @@ public class Server extends Verticle {
         System.out.println("Deploy Server");
 
         final EventBus eb = vertx.eventBus();
-        eb.setDefaultReplyTimeout(5000);
+        eb.setDefaultReplyTimeout(25000);
 
         RouteMatcher routeMatcher = new RouteMatcher();
 
@@ -32,7 +32,7 @@ public class Server extends Verticle {
             public void handle(final HttpServerRequest event) {
 
                 String lat = event.params().get("lat");
-                String lng = event.params().get("lng");
+                String lng = event.params().get("lng./gr    ");
                 GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
                 if(point.isValid()) {
                     eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
@@ -84,9 +84,15 @@ public class Server extends Verticle {
                 usr.putString("firstname","Yoann");
                 usr.putString("lastname","Diquélou");
                 usr.putString("password","bidon");
+
                 eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
                     @Override
                     public void handle(Message<JsonObject> event) {
+                        JsonObject obj = event.body();
+                        if(obj.getInteger("code")==200){
+                            //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
+                            req.response().headers().set("Set-Cookie", obj.getString("cookie"));
+                        }
                         req.response().end(event.body().encodePrettily());
                     }
                 });

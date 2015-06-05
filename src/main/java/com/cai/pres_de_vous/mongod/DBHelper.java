@@ -88,12 +88,20 @@ public class DBHelper extends Verticle {
                                 if(reponse.getInteger("number")==1){
                                     JsonObject userTest = event.body().getArray("results").get(0);
                                     container.logger().info(event.body().getFieldNames().toString());
-                                    user.setToken(userTest.getString("token"));
+                                    JsonObject obj = new JsonObject();
+                                    if(!userTest.getString("token").equals(null)){
+                                        obj.putString("cookie","sessionid="+userTest.getString("token")+";Path=/; Domain=localhost");
+                                        obj.putValue("code",200);
+                                    }else{
+                                        obj.putValue("code",400);
+                                    }
+
+
                                     //user.setToken(event.body().getObject("result")getString("token"));
                                     //eb.send("mongodb-persistor", user.setTokenRequest(), new Handler<Message<JsonObject>>() {
                                         //@Override
                                         //public void handle(Message<JsonObject> event) {
-                                    request.reply(user.toJSON());
+                                    request.reply(obj);
                                     //    }
                                     //});
 
