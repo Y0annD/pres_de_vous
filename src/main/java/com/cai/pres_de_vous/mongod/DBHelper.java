@@ -20,6 +20,7 @@ import java.util.UUID;
 public class DBHelper extends Verticle {
     EventBus eb;
     private static MessageDigest md;
+    private static String DB_PATH = "mongodb-persistor";
 
     @Override
     public void start() {
@@ -32,6 +33,7 @@ public class DBHelper extends Verticle {
             @Override
             public void handle(final Message<JsonObject> request) {
                 JsonObject obj = request.body();
+                final User user;
                 String action = obj.getString("action");
                 String password;
 
@@ -42,16 +44,16 @@ public class DBHelper extends Verticle {
                        password = cryptWithSHA(obj.getString("password"));
                        if(!password.equals("")) {
                            // create the user Object
-                           final User user = new User(obj.getString("firstname"), obj.getString("lastname"), password);
+                           user = new User(obj.getString("firstname"), obj.getString("lastname"), password);
                            container.logger().info(user.registerUserRequest().toString());
                            // check if user exist or not
-                           eb.send("mongodb-persistor", user.findRequest(), new Handler<Message<JsonObject>>() {
+                           eb.send(DB_PATH, user.findRequest(), new Handler<Message<JsonObject>>() {
                                @Override
                                public void handle(Message<JsonObject> event) {
                                    container.logger().info("message: " + event.body().encodePrettily());
                                    // if no users are found, we can create him
                                    if (event.body().getInteger("number") < 1) {
-                                       vertx.eventBus().send("mongodb-persistor", user.registerUserRequest(), new Handler<Message<JsonObject>>() {
+                                       vertx.eventBus().send(DB_PATH, user.registerUserRequest(), new Handler<Message<JsonObject>>() {
                                            @Override
                                            public void handle(Message<JsonObject> subscribe) {
                                                request.reply(subscribe.body());
@@ -79,8 +81,8 @@ public class DBHelper extends Verticle {
                         // crypt password with SHA256
                         password = cryptWithSHA(obj.getString("password"));
                         // create the user Object
-                        final User user = new User(obj.getString("firstname"), obj.getString("lastname"), password);
-                        eb.send("mongodb-persistor", user.sign_in(), new Handler<Message<JsonObject>>() {
+                        user = new User(obj.getString("firstname"), obj.getString("lastname"), password);
+                        eb.send(DB_PATH, user.sign_in(), new Handler<Message<JsonObject>>() {
                             @Override
                             public void handle(Message<JsonObject> event) {
                                 JsonObject reponse = event.body();
@@ -96,19 +98,25 @@ public class DBHelper extends Verticle {
                                         obj.putValue("code",400);
                                     }
 
-
-                                    //user.setToken(event.body().getObject("result")getString("token"));
-                                    //eb.send("mongodb-persistor", user.setTokenRequest(), new Handler<Message<JsonObject>>() {
-                                        //@Override
-                                        //public void handle(Message<JsonObject> event) {
                                     request.reply(obj);
-                                    //    }
-                                    //});
 
                                 }else{
                                     request.reply(event.body());
                                 }
 
+                            }
+                        });
+                        break;
+                    case "FIND":
+                        String token = obj.getString("token");
+                        container.logger().info("token:"+token+"|");
+                        user = new User();
+                        JsonObject req = user.findUserByToken(token);
+                        container.logger().info(req.toString());
+                        eb.send(DB_PATH, req, new Handler<Message<JsonObject>>() {
+                            @Override
+                            public void handle(Message<JsonObject> event) {
+                                request.reply(event.body());
                             }
                         });
                         break;

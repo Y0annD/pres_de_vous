@@ -55,6 +55,16 @@ public class User {
         encrypted_password = encryptedPassword;
     }
 
+    public User(){}
+
+    public User(JsonObject usr){
+        token = usr.getString("token");
+        firstname = usr.getString("firstName");
+        lastname = usr.getString("lastName");
+        insta_key = usr.getString("insta_key");
+        google_key = usr.getString("google_key");
+    }
+
     public String getLastname() {
         return lastname;
     }
@@ -183,6 +193,18 @@ public class User {
         req.putString("action","find");
         req.putString("collection","users");
         req.putObject("matcher",usr);
+        return req;
+    }
+
+
+    public JsonObject findUserByToken(String toke){
+        token = toke;
+        JsonObject req = new JsonObject();
+        req.putString("action","find");
+        req.putString("collection","users");
+        JsonObject matcher = new JsonObject();
+        matcher.putString("token",token);
+        req.putObject("matcher",matcher);
         return req;
     }
 }
