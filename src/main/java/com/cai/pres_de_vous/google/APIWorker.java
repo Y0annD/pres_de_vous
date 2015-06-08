@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by math on 07/06/15.
  */
 public class APIWorker extends Verticle{
-    public int counter;
+    public int counter =0 ;
 
     @Override
     public void start() {
@@ -45,19 +45,19 @@ public class APIWorker extends Verticle{
                                 public void handle(Message<String> eventBusResponse) {
                                     //ConcurrentMap<String, String> map = vertx.sharedData().getMap("google.myset");
                                     //map.put("some-key", "Blah");
-                                    container.logger().info("On incrémente le counter "+map);
+                                    counter++;
+                                    //container.logger().info("On incrémente le counter "+map);
                                     //googlePhotos.putString("photo", eventBusResponse.body());
                                     //counter++;
                                     //event.response().end(eventBusResponse.body().toString());
                                 }
                             });
                         }
-                        container.logger().info("On obtient le fichier JSon suivant : "+map);
                         //message.reply(googlePhotos);
                     }
                 });
                 //googlePhotos.putString("photo", "hihi");
-
+                container.logger().info("Le compteur en est a  : "+Integer.toString(counter));
             }
         };
 
