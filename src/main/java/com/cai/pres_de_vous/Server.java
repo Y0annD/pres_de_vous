@@ -9,7 +9,6 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 import org.vertx.java.platform.Verticle;
 
 /**
@@ -39,7 +38,7 @@ public class Server extends Verticle {
                     eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
-                            event.response().end(eventBusResponse.body().toString());
+                            event.response().end(eventBusResponse.body());
                         }
                     });
                     /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {
@@ -63,25 +62,10 @@ public class Server extends Verticle {
                 String lng = event.params().get("lng");
                 GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
                 if(point.isValid()) {
-                    eb.send("google.serviceRef", point.toJSON(), new Handler<Message<String>>() {
+                    eb.send("google.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
-                            JsonArray obj = new JsonArray(eventBusResponse.body());
-                            for(int i=0; i<obj.size(); i++){ //On récupère ici les references des photos une par une
-                                JsonObject ref_photo = obj.get(i);
-                                container.logger().info("Nous avons récupéré une référence : "+ref_photo+". Nous allons maintenant recupérer sa photo");
-                                eb.send("google.servicePhoto", ref_photo, new Handler<Message<String>>() {
-                                    @Override
-                                    public void handle(Message<String> eventBusResponse) {
-                                        JsonObject obj = new JsonObject(eventBusResponse.body().toString());
-                                        for (int i = 0; i < obj.size(); i++) { //On récupère ici les references des photos une par une
-
-                                        }
-                                        event.response().end(eventBusResponse.body().toString());
-                                    }
-                                });
-                            }
-                            event.response().end(eventBusResponse.body().toString());
+                            event.response().end(eventBusResponse.body());
                         }
                     });
                 }else{
