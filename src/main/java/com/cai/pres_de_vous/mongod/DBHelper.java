@@ -44,7 +44,7 @@ public class DBHelper extends Verticle {
                        password = cryptWithSHA(obj.getString("password"));
                        if(!password.equals("")) {
                            // create the user Object
-                           user = new User(obj.getString("firstname"), obj.getString("lastname"), password);
+                           user = new User(obj.getString("userName"), password,obj.getString("email"));
                            container.logger().info(user.registerUserRequest().toString());
                            // check if user exist or not
                            eb.send(DB_PATH, user.findRequest(), new Handler<Message<JsonObject>>() {
@@ -56,7 +56,11 @@ public class DBHelper extends Verticle {
                                        vertx.eventBus().send(DB_PATH, user.registerUserRequest(), new Handler<Message<JsonObject>>() {
                                            @Override
                                            public void handle(Message<JsonObject> subscribe) {
-                                               request.reply(subscribe.body());
+                                               JsonObject obj = new JsonObject();
+                                               obj.putString("cookie","sessionid="+user.getToken()+";Path=/; Domain=localhost");
+                                               obj.putString("move","https://api.instagram.com/oauth/authorize/?client_id=812f30fbd3144acf843bae2b8d4050ee&redirect_uri=http://localhost:8081/token/insta&response_type=code");
+
+                                               request.reply(obj);
                                            }
                                        });
                                    } else {
@@ -81,7 +85,7 @@ public class DBHelper extends Verticle {
                         // crypt password with SHA256
                         password = cryptWithSHA(obj.getString("password"));
                         // create the user Object
-                        user = new User(obj.getString("firstname"), obj.getString("lastname"), password);
+                        user = new User(obj.getString("userName"), password,obj.getString("email"));
                         eb.send(DB_PATH, user.sign_in(), new Handler<Message<JsonObject>>() {
                             @Override
                             public void handle(Message<JsonObject> event) {

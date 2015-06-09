@@ -14,9 +14,9 @@ public class User {
     public static long TOKEN_VALIDITY = 10000;
 
 
-    private String lastname;
-    private String firstname;
+    private String username;
     private String encrypted_password;
+    private String email;
     private String insta_key;
     private String google_key;
     private String token;
@@ -49,36 +49,33 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String encryptedPassword){
-        firstname = firstName;
-        lastname = lastName;
+    public User(String username, String encryptedPassword, String email){
+        this.username = username;
         encrypted_password = encryptedPassword;
+        this.email =email;
+        setToken();
     }
 
     public User(){}
 
     public User(JsonObject usr){
         token = usr.getString("token");
-        firstname = usr.getString("firstName");
-        lastname = usr.getString("lastName");
+        username = usr.getString("userName");
         insta_key = usr.getString("insta_key");
         google_key = usr.getString("google_key");
     }
 
-    public String getLastname() {
-        return lastname;
+
+    public String getEmail(){return email;}
+
+    public void setEmail(String email){this.email = email;}
+
+    public String getUserName() {
+        return username;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getFirstName() {
-        return firstname;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstname = firstName;
+    public void setUserName(String userName) {
+        this.username = userName;
     }
 
     public String getEncrypted_password() {
@@ -136,9 +133,9 @@ public class User {
      */
     public JsonObject toJSON(){
         JsonObject user = new JsonObject();
-        user.putString("firstName",firstname);
-        user.putString("lastName",lastname);
+        user.putString("userName",username);
         user.putString("password",encrypted_password);
+        user.putString("email",email);
         user.putString("insta_key",insta_key);
         user.putString("google_key",google_key);
         user.putString("token",token);
@@ -153,8 +150,7 @@ public class User {
     public JsonObject findRequest(){
         JsonObject req = new JsonObject();
         JsonObject usr = new JsonObject();
-        usr.putString("firstName",firstname);
-        usr.putString("lastName",lastname);
+        usr.putString("userName",username);
         req.putString("action","find");
         req.putString("collection","users");
         req.putObject("matcher",usr);
@@ -168,8 +164,7 @@ public class User {
     public JsonObject setTokenRequest(){
         JsonObject req = new JsonObject();
         JsonObject usr = new JsonObject();
-        usr.putString("firstName",firstname);
-        usr.putString("lastName",lastname);
+        usr.putString("userName",username);
         req.putString("action","update");
         req.putString("collection","users");
         req.putObject("Criteria", usr);
@@ -187,8 +182,7 @@ public class User {
         JsonObject req = new JsonObject();
         JsonObject usr = new JsonObject();
         //setToken();
-        usr.putString("firstName",firstname);
-        usr.putString("lastName",lastname);
+        usr.putString("userName",username);
         usr.putString("password",encrypted_password);
         req.putString("action","find");
         req.putString("collection","users");
@@ -207,4 +201,6 @@ public class User {
         req.putObject("matcher",matcher);
         return req;
     }
+
+
 }

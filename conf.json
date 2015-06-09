@@ -4,6 +4,6 @@
     "host": "localhost",
     "port": 27017,
     "pool_size": 10,
-    "db_name": "vertx"
+    "db_name": "near_you"
   }
 }

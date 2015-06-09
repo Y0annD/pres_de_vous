@@ -22,9 +22,10 @@ public class APIWorker extends Verticle {
     public void start() {
         super.start();
 
-        System.out.println("Deploy Instagram.APIWorker");
+        container.logger().info("Deploy Instagram.APIWorker");
 
         EventBus eb = vertx.eventBus();
+
 
         Handler<Message<JsonObject>> apiHandler = new Handler<Message<JsonObject>>() {
             String response = "";
@@ -32,9 +33,9 @@ public class APIWorker extends Verticle {
             public void handle(final Message<JsonObject> message) {
 
                 String cookie = message.body().getString("cookie");
-                ConcurrentMap<String, String> map = vertx.sharedData().getMap("storage.user");
+                //ConcurrentMap<String, String> map = vertx.sharedData().getMap("storage.user");
 
-                User user = new User(new JsonObject(map.get(cookie)));
+                //User user = new User(new JsonObject(map.get(cookie)));
 
                 String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
                 System.out.println("link: "+link);
@@ -61,6 +62,7 @@ public class APIWorker extends Verticle {
                         });
                     }
                 });
+                //client.close();
             }
         };
 
