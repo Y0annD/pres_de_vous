@@ -1,0 +1,16 @@
+{
+  "name": "pres_de_vous",
+  "description": "",
+  "homepage": "",
+  "keywords": [],
+  "author": "",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master",
+    "core-elements": "Polymer/core-elements#master",
+    "google-map": "PolymerLabs/google-map"
+  },
+  "resolutions": {
+    "polymer": "master"
+  }
+}
