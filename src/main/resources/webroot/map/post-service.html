@@ -4,20 +4,22 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
 
-<polymer-element name="post-service" attributes="posts">
-<template>
+<dom-module id="post-service">
     <style>
         :host {
             display: none;
         }
     </style>
-    <iron-ajax
-        auto
-        url="../insta/48.3341578/-4.418471"
-        handle-as="json"
-        on-response="postsLoaded">
-    </iron-ajax>
-</template>
+    <template>
+        <iron-ajax
+            auto
+            url="../insta/48.3341578/-4.418471"
+            handle-as="json"
+            on-response="postsLoaded">
+        </iron-ajax>
+    </template>
+</dom-module>
+
 <script>
     Polymer({
         is: 'post-service',
