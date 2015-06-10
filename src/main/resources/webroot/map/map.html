@@ -2,24 +2,32 @@
 <html>
     <head lang="fr">
         <meta charset="UTF-8">
-        <title>Près de vous</title>
-        <link href="css/style.css" rel="stylesheet">
 
-        <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
-        <link rel="import" href="bower_components/google-map/google-map.html" />
-        <style>
-            body, html {
-                font-family: 'Roboto', Arial, sans-serif;
-                height: 100%;
-                margin: 0;
-            }
-            google-map {
-                display: block;
-                height: 100%;
-            }
-        </style>
+        <title>Près de vous</title>
+
+        <link rel="stylesheet" href="styles.css">
+
+        <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+
+        <link rel="import" href="bower_components/google-map/google-map.html">
+        <link rel="import" href="bower_components/iron-input/iron-input.html">
+        <link rel="import" href="bower_components/iron-icon/iron-icon.html">
+        <link rel="import" href="bower_components/iron-icons/iron-icons.html">
+
+        <link rel="import" href="post-service.html">
     </head>
     <body>
-        <google-map latitude="48.3612161" longitude="-4.5661822" zoom="13"></google-map>
+        <post-service></post-service>
+        <google-map latitude="48.3612161" longitude="-4.5661822" zoom="15">
+            <google-map-marker
+                latitude="48.3612161"
+                longitude="-4.5661822"
+                title="ENIBar">
+            </google-map-marker>
+        </google-map>
+        <div id="search">
+            <iron-icon icon="icons:search"></iron-icon>
+            <input placeholder="Emplacement">
+        </div>
     </body>
 </html>
