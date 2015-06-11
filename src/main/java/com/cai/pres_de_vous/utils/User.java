@@ -116,7 +116,7 @@ public class User {
 
     /**
      *
-     *@return Return MongoDB request to insert a user
+     *@return JSONRequest: Return MongoDB request to insert a user
      */
     public JsonObject registerUserRequest(){
         // get date to set token duration

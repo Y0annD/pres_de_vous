@@ -39,23 +39,40 @@ public class Server extends Verticle {
 
         routeMatcher.get("/insta/:lat/:lng", new Handler<HttpServerRequest>() {
             @Override
-            public void handle(final HttpServerRequest event) {
+            public void handle(final HttpServerRequest clientRequest) {
 
-                getUser(event);
-                String lat = event.params().get("lat");
-                String lng = event.params().get("lng");
-                GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
+                String cookie = clientRequest.headers().get("Cookie");
+                String lat = clientRequest.params().get("lat");
+                String lng = clientRequest.params().get("lng");
+                JsonObject usr = new JsonObject();
+                usr.putString("token",cookie.substring(cookie.indexOf("=")+1));
+                usr.putString("action","FIND");
+                container.logger().info(cookie.toString());
+                final GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
                 if(point.isValid()) {
-                    eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
+                    eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
                         @Override
-                        public void handle(Message<String> eventBusResponse) {
-                            JsonObject ob = new JsonObject(eventBusResponse.body().toString());
-                            event.response().end(ob.getArray("data").toString());
+                        public void handle(Message<JsonObject> event) {
+                            container.logger().info(event.body());
+                            if(event.body().getInteger("number")==1){
+                                point.setInstaToken(((JsonObject)event.body().getArray("results").get(0)).getString("insta_key"));
+                                eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
+                                    @Override
+                                    public void handle(Message<String> eventBusResponse) {
+                                        JsonObject ob = new JsonObject(eventBusResponse.body().toString());
+                                        clientRequest.response().end(ob.getArray("data").toString());
+                                    }
+                                });
+                            }else{
+                                clientRequest.response().end("Tu n'est pas autorisé jeune padawan");
+                            }
                         }
                     });
 
+
+
                 }else{
-                    event.response().end("Invalid position");
+                    clientRequest.response().end("Invalid position");
                 }
 
             }
@@ -191,6 +208,7 @@ public class Server extends Verticle {
                                     clientRequest.response().putHeader("Location", obj.getString("move"));
 
                                 }
+
                                 clientRequest.response().end(event.body().encodePrettily());
                             }
                         });
