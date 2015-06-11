@@ -7,6 +7,7 @@ import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -37,8 +38,7 @@ public class Server extends Verticle {
                     eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
-                            JsonObject obj = new JsonObject(eventBusResponse.body());
-                            event.response().end(obj.getArray("data").toString());
+                            event.response().end(eventBusResponse.body());
                         }
                     });
                     /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {
@@ -47,6 +47,28 @@ public class Server extends Verticle {
                             event.response().end(eventBusResponse.body());
                         }
                     });*/
+                }else{
+                    event.response().end("Invalid position");
+                }
+
+            }
+        });
+
+        routeMatcher.get("/google/:lat/:lng", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(final HttpServerRequest event) {
+
+                String lat = event.params().get("lat");
+                String lng = event.params().get("lng");
+                GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
+                if(point.isValid()) {
+                    eb.send("google.service", point.toJSON(), new Handler<Message<String>>() {
+                        @Override
+                        public void handle(Message<String> eventBusResponse) {
+
+                            event.response().end(eventBusResponse.body());
+                        }
+                    });
                 }else{
                     event.response().end("Invalid position");
                 }
