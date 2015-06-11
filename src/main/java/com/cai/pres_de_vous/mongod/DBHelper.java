@@ -36,6 +36,7 @@ public class DBHelper extends Verticle {
                 final User user;
                 String action = obj.getString("action");
                 String password;
+                String token;
 
                 switch(action){
                     // add a new user in the database
@@ -112,7 +113,7 @@ public class DBHelper extends Verticle {
                         });
                         break;
                     case "FIND":
-                        String token = obj.getString("token");
+                        token = obj.getString("token");
                         container.logger().info("token:"+token+"|");
                         user = new User();
                         JsonObject req = user.findUserByToken(token);
@@ -123,6 +124,21 @@ public class DBHelper extends Verticle {
                                 request.reply(event.body());
                             }
                         });
+                        break;
+                    case "UPDATE":
+                        JsonObject updateReq = new JsonObject();
+                        updateReq.putString("action","update");
+                        updateReq.putString("collection","users");
+                        updateReq.putObject("criteria",new JsonObject("{\"token\": \""+obj.getString("token")+"\"}"));
+                        updateReq.putObject("objNew",new JsonObject("{ \"$set\" : {\""+obj.getString("site")+"\" : \""+obj.getString("key")+"\"}}"));
+                        eb.send(DB_PATH, updateReq, new Handler<Message<JsonObject>>() {
+                            @Override
+                            public void handle(Message<JsonObject> event) {
+                                container.logger().info(event.body().toString());
+                                request.reply(event.body());
+                            }
+                        });
+
                         break;
                    default:
                        // password is incorect

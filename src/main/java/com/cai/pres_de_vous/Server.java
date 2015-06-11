@@ -87,91 +87,125 @@ public class Server extends Verticle {
             }
         });
 
-        routeMatcher.get("/test/", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(HttpServerRequest event) {
-                //container.logger().info(event.params().size());
-                vertx.eventBus().setDefaultReplyTimeout(25000).send("instagram.token", "", new Handler<Message<String>>() {
-                    @Override
-                    public void handle(Message<String> event) {
-                        container.logger().info(event.body().toString());
-                    }
-                });
-                event.response().end("Reçu 5/5 houston");
-            }
-        });
 
+        /**
+         * Retour des token, en tout cas pour l'api instagram
+         */
         routeMatcher.get("/token/:site", new Handler<HttpServerRequest>() {
             @Override
-            public void handle(HttpServerRequest event) {
-                container.logger().info(event.params().get("site"));
-                container.logger().info(event.uri().toString());
-                container.logger().info(event.params().get("code"));
-                event.response().end("token bidon");
-            }
-        });
-
-        routeMatcher.post("/mongo/SIGN_UP", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest req) {
-                req.bodyHandler(new Handler<Buffer>() {
-                    @Override
-                    public void handle(Buffer buffer) {
-                        JsonObject usr = new JsonObject();
-                        Map map = getQueryMap(buffer.toString());
-                        if(map.get("name")!=null && map.get("password")!=null && map.get("email")!=null){
-                            usr.putString("userName",map.get("name").toString());
-                            usr.putString("password",map.get("password").toString());
-                            usr.putString("email",map.get("email").toString());
-                            usr.putString("action","SIGN_UP");
-                            eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
-                                @Override
-                                public void handle(Message<JsonObject> event) {
-                                    JsonObject obj = event.body();
-                                    if(obj.getString("cookie")!=null){
-                                        //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
-                                        req.response().headers().set("Set-Cookie", obj.getString("cookie"));
-                                    }
-                                    if(obj.getString("move")!=null) {
-                                        req.response().setStatusCode(301); // or SC_FOUND
-                                        req.response().putHeader("Location", obj.getString("move"));
-
-                                    }
-                                    req.response().end(event.body().encodePrettily());
-                                }
-                            });
-                        }else{
-
-                        }
-                    }
-                });
-
-            }
-        });
-
-        routeMatcher.get("/mongo/:action", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest req) {
-                container.logger().info("in mongo action");
-                final JsonObject usr = new JsonObject();
-                String action = req.params().get("action");
-                //usr.putString("action",req.params().get("action"));
-                if(action.equals("SIGN_UP")){
-                    req.bodyHandler(new Handler<Buffer>() {
+            public void handle(final HttpServerRequest clientRequest) {
+                container.logger().info(clientRequest.params().get("site"));
+                container.logger().info(clientRequest.uri().toString());
+                container.logger().info(clientRequest.params().get("code"));
+                // le paramètre reçu est-il un code?
+                if(clientRequest.params().get("code")!=null){
+                    eb.send("instagram.token", clientRequest.params().get("code"), new Handler<Message<String>>() {
                         @Override
-                        public void handle(Buffer buffer) {
+                        public void handle(Message<String> event) {
 
+                            //container.logger().info(event.body().toString());
+
+                            // récupération du cookie utilisateur pour mettre le token au bon endroit en BDD
+                            String cookie = clientRequest.headers().get("Cookie");
+
+                            if(cookie!=null) {
+                                JsonObject updateRequest = new JsonObject();
+                                updateRequest.putString("action", "UPDATE");
+                                updateRequest.putString("site", "insta_key");
+                                updateRequest.putString("key", event.body().toString());
+                                updateRequest.putString("token", cookie.substring(cookie.indexOf("=") + 1));
+                                eb.send("DBHelper-auth", updateRequest, new Handler<Message<JsonObject>>() {
+                                    @Override
+                                    public void handle(Message<JsonObject> event) {
+                                        //clientRequest.response().end(event.body().toString());
+                                        JsonObject result = event.body();
+                                        if(result.getInteger("number")==1){
+                                            clientRequest.response().setStatusCode(301);
+                                            clientRequest.response().putHeader("Location","http://localhost:8081/insta-test.html");
+                                            clientRequest.response().end(event.body().encodePrettily());
+                                        }else{
+                                            clientRequest.response().end("error while saving datas");
+                                        }
+                                    }
+                                });
+                            }else{
+                                clientRequest.response().end("pas de cookie");
+                            }
                         }
                     });
                 }
-                //usr.putString("firstname","Yoann");
-                //usr.putString("lastname","Diquélou");
-                //usr.putString("password","bidon");
-
-
+                //clientRequest.response().end("token bidon");
             }
         });
 
+
+        /**
+         * Gestion des actions en base de données
+         */
+        routeMatcher.post("/mongo/:action", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(final HttpServerRequest clientRequest) {
+                container.logger().info("in mongo action");
+                final JsonObject usr = new JsonObject();
+                //action demandée par l'API
+                final String action = clientRequest.params().get("action");
+                usr.putString("action",action);
+                /**
+                 * Handler qui récupére les paramètres post de la requête
+                 */
+                clientRequest.bodyHandler(new Handler<Buffer>() {
+                    @Override
+                    public void handle(Buffer buffer) {
+                        // mappage des clefs => valeurs de la requête
+                        Map map = getQueryMap(buffer.toString());
+                        // on récupére l'ensemble des éléments possible, même si il n'existent pas
+                        if(action.equals("SIGN_UP")) {
+                            usr.putString("userName", map.get("name").toString());
+                            usr.putString("password", map.get("password").toString());
+                            usr.putString("email", map.get("email").toString());
+                        }
+                        //usr.putString("token",map.get("token").toString());
+
+                        /*
+                        Traitement des infos en base de donnée
+                         */
+                        eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
+                            @Override
+                            public void handle(Message<JsonObject> event) {
+                                JsonObject obj = event.body();
+                                container.logger().info("sign_up response: "+obj.toString());
+
+                                /*
+                                On assigne à l'utilisateur un cookie de session pour pouvoir utiliser ses token
+                                Instagram ...
+                                 */
+                                if(obj.getString("cookie")!=null){
+                                    container.logger().info("set cookie");
+                                    //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
+                                    clientRequest.response().headers().add("Set-Cookie", obj.getString("cookie"));
+                                }
+
+                                /*
+                                On redirige l'utilisateur automatiquement, pour une meilleur navigation
+                                 */
+                                if(obj.getString("move")!=null) {
+                                    clientRequest.response().setStatusCode(301); // or SC_FOUND
+                                    clientRequest.response().putHeader("Location", obj.getString("move"));
+
+                                }
+                                clientRequest.response().end(event.body().encodePrettily());
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+
+
+        /**
+         * Si aucune route ne correspond, on affiche le front-end
+         */
         routeMatcher.noMatch(new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest req) {

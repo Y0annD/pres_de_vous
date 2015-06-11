@@ -28,7 +28,8 @@ public class TokenFinder extends Verticle {
             @Override
             public void handle(final Message<String> request) {
                 HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
-                container.logger().info("find token");
+
+                String code = request.body();
 
                 HttpClientRequest clientRequest = client.post("/oauth/access_token", new Handler<HttpClientResponse>() {
 
@@ -37,7 +38,6 @@ public class TokenFinder extends Verticle {
                     public void handle(final HttpClientResponse response) {
                         response.dataHandler(new Handler<Buffer>() {
                             public void handle(Buffer data) {
-                                //container.logger().info("data: " + data.toString());
                                 body.appendBuffer(data);
                             }
                         });
@@ -46,16 +46,20 @@ public class TokenFinder extends Verticle {
                             @Override
                             public void handle(Void event) {
                                 container.logger().info(body.toString());
-                                request.reply(body.toString());
+                                JsonObject returned = new JsonObject(body.toString());
+                                if(returned.getString("access_token")!=null){
+                                    request.reply(returned.getString("access_token"));
+                                }else{
+                                    request.reply(body.toString());
+                                }
+
                             }
                         });
                     }
                 });
-               Buffer buf = new Buffer("client_id=812f30fbd3144acf843bae2b8d4050ee&");
-                buf.appendBuffer(new Buffer("client_secret=01bef22d019446b094672c9eb5f9d8cc&"));
-                buf.appendBuffer(new Buffer("grant_type=authorization_code&"));
-                buf.appendBuffer(new Buffer("redirect_uri=http://localhost:8081/token/insta&"));
-                buf.appendBuffer(new Buffer("code=50e61d07b963413ba630263540be94b1"));
+                String postData = "client_id=812f30fbd3144acf843bae2b8d4050ee&client_secret=01bef22d019446b094672c9eb5f9d8cc&grant_type=authorization_code&redirect_uri=http://localhost:8081/token/insta&code="+code;
+               Buffer buf = new Buffer(postData);
+
                 clientRequest.putHeader("Content-length", "" + buf.length());
                 clientRequest.write(buf.toString());
             clientRequest.end();
