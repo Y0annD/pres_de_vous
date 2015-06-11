@@ -1,0 +1,43 @@
+/**
+* Created by florent on 11/06/15.
+*/
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/google-map/google-map.html">
+<link rel="import" href="post-service.html">
+
+<dom-module id="markers-list">
+    <style>
+        :host {
+        }
+    </style>
+    <template>
+        <post-service posts="{{posts}}"></post-service>
+
+        <google-map latitude="48.3612161" longitude="-4.5661822" zoom="15">
+            <google-map-marker
+                    latitude="48.3612161"
+                    longitude="-4.5661822"
+                    title="ENIBar">
+            </google-map-marker>
+            <template is="dom-repeat" items="{{posts}}">
+                <google-map-marker
+                        latitude="{{item.location.latitude}}"
+                        longitude="{{item.location.longitude}}"
+                        title="test">
+                </google-map-marker>
+            </template>
+        </google-map>
+    </template>
+    <script>
+        Polymer({
+            is: 'markers-list',
+
+            properties: {
+                posts: {
+                    type: Array,
+                    value: []
+                }
+            }
+        });
+    </script>
+</dom-module>
