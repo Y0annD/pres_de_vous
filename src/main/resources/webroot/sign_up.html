@@ -80,7 +80,7 @@
         <h1>Bienvenue</h1>
     </core-toolbar>
 
-    <div class="container" layout vertical center>
+    <div class="container" layout>
         Vous souhaitez voir les photos les plus proches de vous, inscrivez vous vite!
 
         <form id="sign_up" action="mongo/SIGN_UP" method="post">
@@ -88,7 +88,7 @@
 
 
             <paper-input-decorator label="Your Name" floatingLabel layout vertical > <input name="name" is="name" required></paper-input-decorator>
-            <paper-input-decorator label="Password" floatingLabel layout vertical > <input name="password" is="password" required></paper-input-decorator>
+            <paper-input-decorator label="Password"  floatingLabel layout vertical > <input name="password" type="password" is="password" required></paper-input-decorator>
             <paper-input-decorator label="Email" floatingLabel layout vertical > <input name="email" is="email" type="email" required></paper-input-decorator><br/>
                 <paper-button id="send" raised layout vertical>Se lancer</paper-button>
             </fieldset>

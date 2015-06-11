@@ -49,6 +49,11 @@ public class User {
 
     }
 
+    public User(String encryptedPassword, String email){
+        encrypted_password = encryptedPassword;
+        this.email =email;
+    }
+
     public User(String username, String encryptedPassword, String email){
         this.username = username;
         encrypted_password = encryptedPassword;
@@ -182,7 +187,7 @@ public class User {
         JsonObject req = new JsonObject();
         JsonObject usr = new JsonObject();
         //setToken();
-        usr.putString("userName",username);
+        usr.putString("email",email);
         usr.putString("password",encrypted_password);
         req.putString("action","find");
         req.putString("collection","users");

@@ -86,7 +86,7 @@ public class DBHelper extends Verticle {
                         // crypt password with SHA256
                         password = cryptWithSHA(obj.getString("password"));
                         // create the user Object
-                        user = new User(obj.getString("userName"), password,obj.getString("email"));
+                        user = new User(password,obj.getString("email"));
                         eb.send(DB_PATH, user.sign_in(), new Handler<Message<JsonObject>>() {
                             @Override
                             public void handle(Message<JsonObject> event) {

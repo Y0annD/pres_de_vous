@@ -53,12 +53,7 @@ public class Server extends Verticle {
                             event.response().end(ob.getArray("data").toString());
                         }
                     });
-                    /*eb.send("instagram.service", "beers", new Handler<Message<String>>() {
-                        public void handle(Message<String> eventBusResponse) {
-                            //System.out.println("Yeah the response is " + eventBusResponse.body());
-                            event.response().end(eventBusResponse.body());
-                        }
-                    });*/
+
                 }else{
                     event.response().end("Invalid position");
                 }
@@ -159,10 +154,13 @@ public class Server extends Verticle {
                         // mappage des clefs => valeurs de la requête
                         Map map = getQueryMap(buffer.toString());
                         // on récupére l'ensemble des éléments possible, même si il n'existent pas
-                        if(action.equals("SIGN_UP")) {
-                            usr.putString("userName", map.get("name").toString());
+                        if(action.equals("SIGN_UP") || action.equals("SIGN_IN")) {
                             usr.putString("password", map.get("password").toString());
                             usr.putString("email", map.get("email").toString());
+                            if(action.equals("SIGN_UP")){
+                                usr.putString("userName", map.get("name").toString());
+
+                            }
                         }
                         //usr.putString("token",map.get("token").toString());
 

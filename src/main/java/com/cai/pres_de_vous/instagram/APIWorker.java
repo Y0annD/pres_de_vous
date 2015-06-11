@@ -36,8 +36,8 @@ public class APIWorker extends Verticle {
                 //ConcurrentMap<String, String> map = vertx.sharedData().getMap("storage.user");
 
                 //User user = new User(new JsonObject(map.get(cookie)));
-
-                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
+                //1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626
+                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token="+message.body().getString("token");
                 System.out.println("link: "+link);
                 HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
 
