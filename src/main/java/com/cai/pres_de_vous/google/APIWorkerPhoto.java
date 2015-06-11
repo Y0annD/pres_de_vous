@@ -10,6 +10,8 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
+import java.util.concurrent.ConcurrentMap;
+
 /**
  * Created by math on 07/06/15.
  */
@@ -29,8 +31,13 @@ public class APIWorkerPhoto extends Verticle{
 
             @Override
             public void handle(final Message<JsonObject> message) {
+
+                ConcurrentMap<Integer, String> map = vertx.sharedData().getMap("worker.photo");
+
                 //container.logger().info("La référence qui arrive dans le APIWorkerPhoto : "+message.body().getString("photo_reference"));
                 String link = "/maps/api/place/photo?maxwidth=400&photoreference="+message.body().getString("photo_reference")+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+                int number = message.body().getInteger("number");
+
                 System.out.println("link: "+link);
                 client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
 
@@ -53,7 +60,8 @@ public class APIWorkerPhoto extends Verticle{
                                 String img = buff.getString(168, len-29);
                                 //container.logger().info("On traite une fois la photo : " +
                                 //        "La réponse est de taille :  "+len+" et son contenu est : "+img);
-                                message.reply(img);
+                                map.put(number, img);
+                                message.reply();
                             }
                         });
                     }

@@ -65,6 +65,7 @@ public class Server extends Verticle {
                     eb.send("google.service", point.toJSON(), new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
+
                             event.response().end(eventBusResponse.body());
                         }
                     });
