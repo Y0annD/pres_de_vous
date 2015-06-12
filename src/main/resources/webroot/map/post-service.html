@@ -13,7 +13,7 @@
     <template>
         <iron-ajax
             auto
-            url="../insta/48.3341578/-4.418471"
+            url="{{computeJsonUrl(lat, lng)}}"
             handle-as="json"
             on-response="postsLoaded">
         </iron-ajax>
@@ -28,13 +28,17 @@
                     value: [],
                     notify: true
                 },
+                lat: Number,
+                lng: Number
+            },
+
+            computeJsonUrl: function(latitude, longitude) {
+                return '../insta/'+latitude+'/'+longitude;
             },
 
             postsLoaded: function(request) {
                 // Make a copy of the loaded data
                 this.posts = request.detail.response;
-                console.log('postsLoaded');
-                console.log(this.posts);
             },
 
             /**

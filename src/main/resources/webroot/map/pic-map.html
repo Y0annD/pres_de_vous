@@ -5,20 +5,15 @@
 <link rel="import" href="bower_components/google-map/google-map.html">
 <link rel="import" href="post-service.html">
 
-<dom-module id="markers-list">
+<dom-module id="pic-map">
     <style>
         :host {
         }
     </style>
     <template>
-        <post-service posts="{{posts}}"></post-service>
+        <post-service lat="{{lat}}" lng="{{lng}}" posts="{{posts}}"></post-service>
 
-        <google-map latitude="48.3612161" longitude="-4.5661822" zoom="15">
-            <google-map-marker
-                    latitude="48.3612161"
-                    longitude="-4.5661822"
-                    title="ENIBar">
-            </google-map-marker>
+        <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" zoom="15">
             <template is="dom-repeat" items="{{posts}}">
                 <google-map-marker
                         latitude="{{item.location.latitude}}"
@@ -30,12 +25,20 @@
     </template>
     <script>
         Polymer({
-            is: 'markers-list',
+            is: 'pic-map',
 
             properties: {
                 posts: {
                     type: Array,
                     value: []
+                },
+                lat: {
+                    type: Number,
+                    value: 0
+                },
+                lng: {
+                    type: Number,
+                    value: 0
                 }
             }
         });
