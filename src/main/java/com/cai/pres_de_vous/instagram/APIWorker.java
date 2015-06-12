@@ -1,5 +1,6 @@
 package com.cai.pres_de_vous.instagram;
 
+import com.cai.pres_de_vous.utils.User;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.EventBus;
@@ -8,6 +9,8 @@ import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
+
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by crocus on 30/05/15.
@@ -19,18 +22,23 @@ public class APIWorker extends Verticle {
     public void start() {
         super.start();
 
-        System.out.println("Deploy Instagram.APIWorker");
+        container.logger().info("Deploy Instagram.APIWorker");
 
         EventBus eb = vertx.eventBus();
+
 
         Handler<Message<JsonObject>> apiHandler = new Handler<Message<JsonObject>>() {
             String response = "";
             @Override
             public void handle(final Message<JsonObject> message) {
 
-                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
-                link = "/v1/media/search?lat=48.3587663&lng=-4.5548653&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
-                System.out.println("link: "+link);
+                String cookie = message.body().getString("cookie");
+                //ConcurrentMap<String, String> map = vertx.sharedData().getMap("storage.user");
+
+                //User user = new User(new JsonObject(map.get(cookie)));
+                //1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626
+                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token="+message.body().getString("insta_token");
+                container.logger().info("link: "+link);
                 HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
 
 
@@ -48,11 +56,13 @@ public class APIWorker extends Verticle {
                         response.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
+
                                 message.reply(body.toString());
                             }
                         });
                     }
                 });
+                //client.close();
             }
         };
 

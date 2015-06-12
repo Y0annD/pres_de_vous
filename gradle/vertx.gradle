@@ -17,9 +17,11 @@ import org.vertx.java.platform.impl.cli.Starter
  */
 
 apply plugin: 'java'
+<<<<<<< HEAD
 //apply plugin: 'groovy'
+=======
+>>>>>>> instagram
 apply plugin: 'idea'
-apply plugin: 'eclipse'
 
 def cpSeparator = System.getProperty("path.separator")
 

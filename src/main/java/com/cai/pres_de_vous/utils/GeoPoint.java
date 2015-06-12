@@ -8,6 +8,7 @@ import org.vertx.java.core.json.JsonObject;
 public class GeoPoint {
     private float longitude;
     private float latitude;
+    private String insta_token;
 
     public GeoPoint(float lat, float lng){
         longitude = lng;
@@ -37,6 +38,10 @@ public class GeoPoint {
         this.longitude = longitude;
     }
 
+    public void setInstaToken(String token){insta_token = token;}
+
+    public String getInstaToken(){return insta_token;}
+
     public boolean isValid(){
         if(latitude>=-90.0 && latitude<=90.0 && longitude>=-180.0 && longitude<=180.0)return true;
         return false;
@@ -46,7 +51,7 @@ public class GeoPoint {
         JsonObject json = new JsonObject();
         json.putValue("latitude",latitude+"");
         json.putValue("longitude", longitude+"");
-        System.out.println("JSON created");
+        json.putString("insta_token",insta_token);
         return json;
     }
 }

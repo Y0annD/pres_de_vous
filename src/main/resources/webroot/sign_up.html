@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>Près de vous</title>
+    <title>Sign up</title>
 
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
@@ -81,15 +81,16 @@
     </core-toolbar>
 
     <div class="container" layout>
-        Vous souhaitez voir les photos les plus proches de vous, inscrivez vous vite <a href="sign_up.html">ici</a>!
+        Vous souhaitez voir les photos les plus proches de vous, inscrivez vous vite!
 
-        <form id="sign_up" action="mongo/SIGN_IN" method="post">
+        <form id="sign_up" action="mongo/SIGN_UP" method="post">
             <fieldset name="personalInfo">
 
-                <paper-input-decorator label="Email" floatingLabel layout vertical > <input name="email" is="email" type="email" required></paper-input-decorator>
-            <paper-input-decorator label="Password" floatingLabel layout vertical > <input name="password" type="password" is="password" required></paper-input-decorator>
-            <br/>
-                <paper-button id="send" raised layout vertical>Se connecter</paper-button>
+
+            <paper-input-decorator label="Your Name" floatingLabel layout vertical > <input name="name" is="name" required></paper-input-decorator>
+            <paper-input-decorator label="Password"  floatingLabel layout vertical > <input name="password" type="password" is="password" required></paper-input-decorator>
+            <paper-input-decorator label="Email" floatingLabel layout vertical > <input name="email" is="email" type="email" required></paper-input-decorator><br/>
+                <paper-button id="send" raised layout vertical>Se lancer</paper-button>
             </fieldset>
         </form>
     </div>
