@@ -15,14 +15,11 @@ public class EntryPoint extends Verticle {
         super.start();
         JsonObject appConfig = container.config();
 
-<<<<<<< HEAD
         container.deployWorkerVerticle("com.cai.pres_de_vous.google.APIWorker",1);
         container.deployWorkerVerticle("com.cai.pres_de_vous.google.APIWorkerPhoto",1);
         container.deployWorkerVerticle("com.cai.pres_de_vous.google.APIWorkerReference",1);
-=======
-        // deploy workers
-        container.deployWorkerVerticle("com.cai.pres_de_vous.google.APIWorkerGoogle",1);
->>>>>>> instagram
+
+
         container.deployWorkerVerticle("com.cai.pres_de_vous.instagram.APIWorker",1);
         container.deployWorkerVerticle("com.cai.pres_de_vous.instagram.TokenFinder");
         container.deployWorkerVerticle("com.cai.pres_de_vous.mongod.DBHelper");

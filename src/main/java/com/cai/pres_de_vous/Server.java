@@ -53,10 +53,7 @@ public class Server extends Verticle {
                 if(point.isValid()) {
                     eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
                         @Override
-<<<<<<< HEAD
-                        public void handle(Message<String> eventBusResponse) {
-                            event.response().end(eventBusResponse.body());
-=======
+
                         public void handle(Message<JsonObject> event) {
                             container.logger().info(event.body());
                             if(event.body().getInteger("number")==1){
@@ -71,7 +68,6 @@ public class Server extends Verticle {
                             }else{
                                 clientRequest.response().end("Tu n'est pas autorisé jeune padawan");
                             }
->>>>>>> instagram
                         }
                     });
 

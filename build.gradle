@@ -56,15 +56,11 @@ dependencies {
   //provided "io.vertx:lang-groovy:$groovyLangModVersion@jar"
 
   compile 'org.mongodb:mongo-java-driver:2.12.4'
-<<<<<<< HEAD
 
   compile 'com.google.inject:guice:3.0'
 
   compile 'com.englishtown:vertx-mod-when:3.0.1'
-=======
-  compile 'com.campudus:session-manager:2.0.1-final'
->>>>>>> instagram
-  compile 'com.google.inject:guice:3.0'
+
 
 }
 
