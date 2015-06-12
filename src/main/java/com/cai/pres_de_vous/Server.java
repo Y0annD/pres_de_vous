@@ -197,7 +197,7 @@ public class Server extends Verticle {
                                 if(obj.getString("cookie")!=null){
                                     container.logger().info("set cookie");
                                     //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
-                                    clientRequest.response().headers().add("Set-Cookie", obj.getString("cookie"));
+                                    clientRequest.response().putHeader("Cookie", obj.getString("cookie"));
                                 }
 
                                 /*
@@ -225,6 +225,7 @@ public class Server extends Verticle {
         routeMatcher.noMatch(new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest req) {
+
                 String file = "";
                 if (req.path().equals("/")) {
                     file = "index.html";
