@@ -1,0 +1,60 @@
+/**
+ * Created by florent on 09/06/15.
+ */
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="post-service">
+    <style>
+        :host {
+            display: none;
+        }
+    </style>
+    <template>
+        <iron-ajax
+            auto
+            url="{{computeJsonUrl(lat, lng)}}"
+            handle-as="json"
+            on-response="postsLoaded">
+        </iron-ajax>
+    </template>
+    <script>
+        Polymer({
+            is: 'post-service',
+
+            properties: {
+                posts: {
+                    type: Array,
+                    value: [],
+                    notify: true
+                },
+                lat: Number,
+                lng: Number
+            },
+
+            computeJsonUrl: function(latitude, longitude) {
+                return '../insta/'+latitude+'/'+longitude;
+            },
+
+            postsLoaded: function(request) {
+                // Make a copy of the loaded data
+                this.posts = request.detail.response;
+            },
+
+            /**
+             * Update the service with the current favorite value.
+             * (Two-way data binding updates the favorite value
+             * stored locally.) If this was a real service, this
+             * method would do something useful.
+             *
+             * @method setFavorite
+             * @param uid {Number} Unique ID for post.
+             * @param isFavorite {Boolean} True if the user marked this post as a favorite.
+             */
+            setFavorite: function(uid, isFavorite) {
+                // no service backend, just log the change
+                console.log('Favorite changed: ' + uid + ", now: " + isFavorite);
+            }
+        });
+    </script>
+</dom-module>

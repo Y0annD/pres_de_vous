@@ -1,0 +1,23 @@
+body, html {
+    font-family: 'Roboto', Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+}
+google-map {
+    display: block;
+    height: 100%;
+}
+#search {
+    background: #fff;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    z-index: 100;
+}
+
+#search input {
+    border: 0px;
+    margin-top: 5px;
+    width: 200px;
+}
