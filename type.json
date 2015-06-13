@@ -1,0 +1,27 @@
+{
+    "code": 200,
+    "results":[
+        {
+            "source":"instagram",
+            "location":{
+                "latitude":48.337141588,
+                "longitude":-4.414908811
+            },
+            "link":"https://instagram.com/p/3CR6eqLMQO/", 
+            "image":{
+                "url":"http://site/qqpart/img.png",
+                "width":"800px",
+                "height": "600px"
+            },
+            "author":{
+                "username":"florentLP",
+                "profile_picture":"http//maPhoho/facebook/coucou.png"
+            }
+        },
+        {
+                .
+                .
+                .
+        }
+    ]
+}
