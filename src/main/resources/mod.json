@@ -3,21 +3,6 @@
   // Java verticle
   "main": "com.cai.pres_de_vous.EntryPoint",
 
-  // In this example we also provide various other versions of the main verticle, you can uncomment this and
-  // play around:
-
-  // Java *source* verticle
-  //"main":"JavaSourcePingVerticle.java",
-
-  // Ruby verticle
-  //"main":"ping_verticle.rb",
-
-  // JavaScript verticle
-  //"main": "ping_verticle.js",
-
-  // Python verticle
-  //"main": "ping_verticle.py",
-
 
   // If your module is going to be registered in the Vert.x module registry you will also need the following
   // mandatory fields

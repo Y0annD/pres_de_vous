@@ -52,6 +52,7 @@ public class APIWorkerReference extends Verticle {
 
                 String link = "/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius="+perim+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
                 System.out.println("link: "+link);
+
                 client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
 
                 client.getNow(link, new Handler<HttpClientResponse>() {
@@ -142,9 +143,11 @@ public class APIWorkerReference extends Verticle {
     public JsonArray listReferencesPhotos(JsonObject obj){
         JsonArray listeReferences = new JsonArray();
         JsonArray results = obj.getArray("results");    // On récupère la liste des lieux autours de nous
+        container.logger().info("json: "+obj.toString());
         for(int i=0; i < results.size(); i++){
             JsonObject result = results.get(i);
             JsonArray photos = result.getArray("photos");   // Pour chaque lieu on récupère la liste des photos associées si elles exitent
+
             if(photos != null){
                 for(int j=0; j < photos.size(); j++){
                     JsonObject photo = photos.get(j);

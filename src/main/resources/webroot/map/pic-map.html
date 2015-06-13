@@ -1,0 +1,46 @@
+/**
+* Created by florent on 11/06/15.
+*/
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/google-map/google-map.html">
+<link rel="import" href="post-service.html">
+
+<dom-module id="pic-map">
+    <style>
+        :host {
+        }
+    </style>
+    <template>
+        <post-service lat="{{lat}}" lng="{{lng}}" posts="{{posts}}"></post-service>
+
+        <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" zoom="15">
+            <template is="dom-repeat" items="{{posts}}">
+                <google-map-marker
+                        latitude="{{item.location.latitude}}"
+                        longitude="{{item.location.longitude}}"
+                        title="test">
+                </google-map-marker>
+            </template>
+        </google-map>
+    </template>
+    <script>
+        Polymer({
+            is: 'pic-map',
+
+            properties: {
+                posts: {
+                    type: Array,
+                    value: []
+                },
+                lat: {
+                    type: Number,
+                    value: 0
+                },
+                lng: {
+                    type: Number,
+                    value: 0
+                }
+            }
+        });
+    </script>
+</dom-module>

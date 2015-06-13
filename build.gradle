@@ -56,11 +56,10 @@ dependencies {
   //provided "io.vertx:lang-groovy:$groovyLangModVersion@jar"
 
   compile 'org.mongodb:mongo-java-driver:2.12.4'
-
   compile 'com.google.inject:guice:3.0'
-
   compile 'com.englishtown:vertx-mod-when:3.0.1'
-  compile 'com.google.inject:guice:3.0'
+  compile 'io.vertx:mod-mongo-persistor:2.1.1'
+
 
 }
 
