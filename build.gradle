@@ -59,6 +59,7 @@ dependencies {
   compile 'com.google.inject:guice:3.0'
   compile 'com.englishtown:vertx-mod-when:3.0.1'
   compile 'io.vertx:mod-mongo-persistor:2.1.1'
+  compile 'org.scribe:scribe:1.3.6'
 
 
 }

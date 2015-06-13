@@ -155,6 +155,13 @@ public class Server extends Verticle {
         });
 
 
+        routeMatcher.get("/twitter/", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest clientRequest) {
+
+            }
+        });
+
         /**
          * Gestion des actions en base de données
          */
@@ -165,7 +172,7 @@ public class Server extends Verticle {
                 final JsonObject usr = new JsonObject();
                 //action demandée par l'API
                 final String action = clientRequest.params().get("action");
-                usr.putString("action",action);
+                usr.putString("action", action);
                 /**
                  * Handler qui récupére les paramètres post de la requête
                  */
@@ -175,10 +182,10 @@ public class Server extends Verticle {
                         // mappage des clefs => valeurs de la requête
                         Map map = getQueryMap(buffer.toString());
                         // on récupére l'ensemble des éléments possible, même si il n'existent pas
-                        if(action.equals("SIGN_UP") || action.equals("SIGN_IN")) {
+                        if (action.equals("SIGN_UP") || action.equals("SIGN_IN")) {
                             usr.putString("password", map.get("password").toString());
                             usr.putString("email", map.get("email").toString());
-                            if(action.equals("SIGN_UP")){
+                            if (action.equals("SIGN_UP")) {
                                 usr.putString("userName", map.get("name").toString());
 
                             }
@@ -192,13 +199,13 @@ public class Server extends Verticle {
                             @Override
                             public void handle(Message<JsonObject> event) {
                                 JsonObject obj = event.body();
-                                container.logger().info("sign_up response: "+obj.toString());
+                                container.logger().info("sign_up response: " + obj.toString());
 
                                 /*
                                 On assigne à l'utilisateur un cookie de session pour pouvoir utiliser ses token
                                 Instagram ...
                                  */
-                                if(obj.getString("cookie")!=null){
+                                if (obj.getString("cookie") != null) {
                                     container.logger().info("set cookie");
                                     //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
                                     clientRequest.response().putHeader("Set-Cookie", obj.getString("cookie"));
@@ -207,7 +214,7 @@ public class Server extends Verticle {
                                 /*
                                 On redirige l'utilisateur automatiquement, pour une meilleur navigation
                                  */
-                                if(obj.getString("move")!=null) {
+                                if (obj.getString("move") != null) {
                                     clientRequest.response().setStatusCode(301); // or SC_FOUND
                                     clientRequest.response().putHeader("Location", obj.getString("move"));
 

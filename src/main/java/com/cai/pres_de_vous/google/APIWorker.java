@@ -43,7 +43,6 @@ public class APIWorker extends Verticle{
                 response = new JsonObject();
 
                 List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
-                container.logger().info("Point: "+point.toString());
                 promises.add(whenEventBus.sendWithTimeout("google.serviceRef", point, 15000));
 
                 //container.logger().info(when.toString());
