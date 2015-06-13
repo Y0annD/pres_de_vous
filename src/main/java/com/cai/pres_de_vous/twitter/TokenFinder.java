@@ -35,6 +35,7 @@ public class TokenFinder extends Verticle {
                 OAuthService service = new ServiceBuilder().provider(TwitterApi.class)
                         .apiKey("dUwKQI88r79uh1QXM28RrtOQ2")
                         .apiSecret("fDvVBoAqjbqBHfP8va1nRCoqfJohmQ7f6f6xCkTGZ")
+                        .build();
             }
         };
 
