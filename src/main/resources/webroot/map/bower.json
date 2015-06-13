@@ -1,0 +1,23 @@
+{
+  "name": "pres_de_vous",
+  "version": "0.0.0",
+  "homepage": "https://github.com/breizhers/pres_de_vous",
+  "authors": [
+    "Florent-LP <lp.florent@gmail.com>"
+  ],
+  "description": "Accedez aux photos prises à proximité de votre position",
+  "main": "map.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer",
+    "iron-elements": "PolymerElements/iron-elements",
+    "google-map": "PolymerLabs/google-map"
+  }
+}

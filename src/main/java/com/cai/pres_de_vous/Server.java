@@ -46,13 +46,14 @@ public class Server extends Verticle {
                 String lat = clientRequest.params().get("lat");
                 String lng = clientRequest.params().get("lng");
                 JsonObject usr = new JsonObject();
-                usr.putString("token",cookie.substring(cookie.indexOf("=")+1));
+                container.logger().info("cookie: "+cookie);
+                if(cookie!=null)
+                    usr.putString("token",cookie.substring(cookie.indexOf("=")+1));
                 usr.putString("action","FIND");
-                container.logger().info(cookie.toString());
                 final GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
                 if(point.isValid()) {
                     eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
-                        @Override
+                       @Override
 
                         public void handle(Message<JsonObject> event) {
                             container.logger().info(event.body());
@@ -200,7 +201,7 @@ public class Server extends Verticle {
                                 if(obj.getString("cookie")!=null){
                                     container.logger().info("set cookie");
                                     //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
-                                    clientRequest.response().putHeader("Cookie", obj.getString("cookie"));
+                                    clientRequest.response().putHeader("Set-Cookie", obj.getString("cookie"));
                                 }
 
                                 /*

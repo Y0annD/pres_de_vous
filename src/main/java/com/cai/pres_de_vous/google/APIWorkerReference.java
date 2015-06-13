@@ -47,9 +47,8 @@ public class APIWorkerReference extends Verticle {
 
 
                 counter = 0;
-
                 String link = "/maps/api/place/nearbysearch/json?location="+message.body().getString("latitude")+","+message.body().getString("longitude")+"&radius=500&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
-                System.out.println("link: "+link);
+                container.logger().info("link: " + link);
                 client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
 
                 client.getNow(link, new Handler<HttpClientResponse>() {
@@ -67,16 +66,15 @@ public class APIWorkerReference extends Verticle {
                         response.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
-                                //container.logger().info("BLAHBLAHBLAHBLAHBLAHBLAH");
+                               // container.logger().info("BLAHBLAHBLAHBLAHBLAHBLAH");
                                 JsonObject obj = new JsonObject(body.toString());
                                 JsonArray refPhotos = listReferencesPhotos(obj);
-
                                 java.util.List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
 
                                 for(int i=0; i<refPhotos.size(); i++){ //On récupère ici les references des photos une par une
                                     JsonObject ref_photo = refPhotos.get(i);
                                     ref_photo.putNumber("number", counter);
-                                    //container.logger().info("Ici on envoie la référence suivante : "+ref_photo.toString());
+                                    container.logger().info("Ici on envoie la référence suivante : "+ref_photo.toString());
                                     //container.logger().info("Nous avons récupéré une référence : "+ref_photo+". Nous allons maintenant recupérer sa photo");
 
 
@@ -117,9 +115,11 @@ public class APIWorkerReference extends Verticle {
     public JsonArray listReferencesPhotos(JsonObject obj){
         JsonArray listeReferences = new JsonArray();
         JsonArray results = obj.getArray("results");    // On récupère la liste des lieux autours de nous
+        container.logger().info("json: "+obj.toString());
         for(int i=0; i < results.size(); i++){
             JsonObject result = results.get(i);
             JsonArray photos = result.getArray("photos");   // Pour chaque lieu on récupère la liste des photos associées si elles exitent
+
             if(photos != null){
                 for(int j=0; j < photos.size(); j++){
                     JsonObject photo = photos.get(j);
