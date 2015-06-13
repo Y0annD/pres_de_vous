@@ -41,7 +41,6 @@ public class APIWorker extends Verticle{
             public void handle(final Message<JsonObject> message) {
                 JsonObject point = message.body();
                 response = new JsonObject();
-
                 List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
                 promises.add(whenEventBus.sendWithTimeout("google.serviceRef", point, 15000));
 
@@ -57,7 +56,7 @@ public class APIWorker extends Verticle{
                             }*/
                             for(int i = 0; i<map.size(); i++) {
                                 response.putString("photo"+i, map.get(i));
-                                container.logger().info("Le reponse est : " +map.get(i));
+                                //container.logger().info("Le reponse est : " +map.get(i));
 
                             }
                             container.logger().info("Yes we did it !!!!!!!!!!!!!!!!!!!!!!!!! LA reponse est :"+response.toString());
