@@ -232,6 +232,7 @@ public class Server extends Verticle {
                                     container.logger().info("set cookie");
                                     //String cookie = req.headers().get("Cookie"); //La valeur contenue dans cookie
                                     clientRequest.response().putHeader("Set-Cookie", obj.getString("cookie"));
+                                    clientRequest.response().putHeader("Set-Cookie",obj.getString("cookie").replace("localhost","127.0.0.1"));
                                 }
 
                                 /*
