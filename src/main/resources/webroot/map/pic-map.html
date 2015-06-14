@@ -3,7 +3,9 @@
 */
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/google-map/google-map.html">
+
 <link rel="import" href="post-service.html">
+<link rel="import" href="post-card.html">
 
 <dom-module id="pic-map">
     <style>
@@ -18,7 +20,16 @@
                 <google-map-marker
                         latitude="{{item.location.latitude}}"
                         longitude="{{item.location.longitude}}"
-                        title="test">
+                        title="{{item.location.name}}">
+                    <post-card
+                        favorite="{{item.favorite}}"
+                        on-favorite-tap="{{handleFavorite}}"
+                        hidden?="{{show == 'favorites' && !post.favorite}}">
+                        <img class="round" src="{{item.user.profile_picture}}" width="70" height="70">
+                        <!--<h2>{{item.user.username}}</h2>
+                        <p>{{item.text}}</p><br />--><br />
+                        <img src="{{item.images.low_resolution.url}}" alt="{{item.location.name}}" />
+                    </post-card>
                 </google-map-marker>
             </template>
         </google-map>

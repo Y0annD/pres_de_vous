@@ -1,71 +1,73 @@
-<link rel="import" href="components/polymer/polymer.html">
-<link rel="import" href="components/core-icon-button/core-icon-button.html">
+/**
+* Created by florent on 12/06/15.
+*/
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
 
-<polymer-element name="post-card">
-  <template>
+<dom-module id="post-card">
     <style>
-    :host {
-      display: block;
-      position: relative;
-      background-color: white;
-      padding: 20px;
-      width: 100%;
-      font-size: 1.2rem;
-      font-weight: 300;
-    }
-    .card-header {
-      margin-bottom: 10px;
-    }
-    polyfill-next-selector { content: '.card-header h2'; }
-    .card-header ::content h2 {
-      margin: 0;
-      font-size: 1.8rem;
-      font-weight: 300;
-    }
-    polyfill-next-selector { content: '.card-header .round'; }
-    .card-header ::content img .round{
-      width: 70px;
-      border-radius: 50%;
-      margin: 10px;
-    }
-    core-icon-button {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      color: #636363;
-    }
-    :host([favorite]) core-icon-button {
-      color: #da4336;
-    }
+        :host {
+            display: block;
+            position: relative;
+            background-color: white;
+            padding: 20px;
+            width: 100%;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        .card-header {
+            margin-bottom: 10px;
+        }
+        /*polyfill-next-selector { content: '.card-header h2'; }*/
+        .card-header ::content h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+        /*polyfill-next-selector { content: '.card-header .round'; }*/
+        .card-header ::content img .round{
+            width: 70px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+        iron-icon {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            color: #636363;
+        }
+        :host([favorite]) iron-icon {
+            color: #da4336;
+        }
     </style>
+    <template>
+        <div class="card-header" layout horizontal center>
+            <content select="img"></content>
+            <content select="h2"></content>
+        </div>
 
-    <div class="card-header" layout horizontal center>
+        <iron-icon
+            id="favicon"
+            icon="icons:favorite"
+            on-tap="{{favoriteTapped}}">
+        </iron-icon>
 
-      <content select="img"></content>
-      <content select="h2"></content>
+        <content></content>
+    </template>
+    <script>
+        Polymer({
+            publish: {
+                favorite: {
+                    value: false,
+                    reflectToAttribute: true
+                }
+            },
 
-    </div>
-
-    <core-icon-button
-      id="favicon"
-      icon="favorite"
-      on-tap="{{favoriteTapped}}">
-    </core-icon-button>
-
-    <content></content>
-  </template>
-  <script>
-  Polymer({
-    publish: {
-      favorite: {
-        value: false,
-        reflect: true
-      }
-    },
-    favoriteTapped: function(event, detail, sender) {
-      this.favorite = !this.favorite;
-      this.fire('favorite-tap');
-    }
-  });
-  </script>
-</polymer-element>
+            favoriteTapped: function(event, detail, sender) {
+                this.favorite = !this.favorite;
+                this.fire('favorite-tap');
+            }
+        });
+    </script>
+</dom-module>
