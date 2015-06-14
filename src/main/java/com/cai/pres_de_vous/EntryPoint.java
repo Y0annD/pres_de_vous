@@ -24,6 +24,7 @@ public class EntryPoint extends Verticle {
         container.deployWorkerVerticle("com.cai.pres_de_vous.instagram.TokenFinder");
 
         container.deployWorkerVerticle("com.cai.pres_de_vous.twitter.TokenFinder");
+        container.deployWorkerVerticle("com.cai.pres_de_vous.twitter.APIWorker");
 
         container.deployWorkerVerticle("com.cai.pres_de_vous.mongod.DBHelper");
 

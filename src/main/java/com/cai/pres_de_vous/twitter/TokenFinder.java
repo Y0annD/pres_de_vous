@@ -21,7 +21,7 @@ import java.util.Scanner;
  */
 public class TokenFinder extends Verticle {
 
-    private static final String PROTECTED_RESOURCE_URL = "https://api.twitter.com/1.1/account/verify_credentials.json";
+    private static final String PROTECTED_RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json?q=%20&geocode=48.3341578%2C-4.418471%2C10km";
 
     @Override
     public void start() {

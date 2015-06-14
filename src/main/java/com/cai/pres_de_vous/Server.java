@@ -156,6 +156,20 @@ public class Server extends Verticle {
         });
 
 
+        routeMatcher.get("/twitter/:lat/:lng", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest clientRequest) {
+                String lat = clientRequest.params().get("lat");
+                String lng = clientRequest.params().get("lng");
+                GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
+                eb.send("twitter.service", point.toJSON(), new Handler<Message<JsonObject>>() {
+                    @Override
+                    public void handle(Message<JsonObject> event) {
+                        clientRequest.response().end(event.body().encodePrettily());
+                    }
+                });
+            }
+        });
 
 
         routeMatcher.get("/twitter/:code", new Handler<HttpServerRequest>() {
