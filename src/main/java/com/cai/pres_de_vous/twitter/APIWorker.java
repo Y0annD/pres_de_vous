@@ -7,6 +7,7 @@ import org.scribe.oauth.OAuthService;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -47,7 +48,44 @@ public class APIWorker extends Verticle {
                 System.out.println("Got it! Lets see what we found...");
                 System.out.println();
                 System.out.println(response.getBody());
-                event.reply(new JsonObject(response.getBody()));
+
+                /**
+                 * Traitement de la réponse
+                 */
+                JsonObject twitterResponse = new JsonObject(response.getBody());
+                JsonArray tweetsArray = twitterResponse.getArray("statuses");
+                int arraySize = tweetsArray.size();
+                JsonObject resp = new JsonObject();
+                if(arraySize>0) {
+                    resp.putValue("code", 200);
+                    JsonArray respArray = new JsonArray();
+                    for (int i = 0; i < arraySize; i++) {
+                        JsonObject obj = new JsonObject();
+                        JsonObject tweet = tweetsArray.get(i);
+                        obj.putString("source","twitter");
+                        if(tweet.getObject("retweeted_status")!=null)tweet = tweet.getObject("retweeted_status");
+                        JsonArray locArray = tweet.getObject("geo").getArray("coordinates");
+                        JsonObject location = new JsonObject("{\"latitude\":"+locArray.get(0)+",\"longitude\":"+locArray.get(1)+"}");
+                        obj.putObject("location",location);
+
+
+                        JsonObject tweetAuthor = tweet.getObject("user");
+
+                        obj.putString("link","https://twitter.com/"+tweetAuthor.getString("screen_name")+"/status/"+tweet.getString("id_str"));
+                        obj.putString("text",tweet.getString("text"));
+
+                        obj.putObject("author",new JsonObject("{\"username\": \""+tweetAuthor.getString("screen_name")+"\", \"profile_picture\": \""+tweetAuthor.getString("profile_image_url")+"\"}"));
+
+                        //obj.putObject("location",);
+                        respArray.add(obj);
+
+                    }
+                    resp.putArray("results",respArray);
+                    container.logger().info("response: "+resp.toString());
+                }else{
+                    resp.putValue("code", 400);
+                }
+                event.reply(resp);
             }
         };
 
