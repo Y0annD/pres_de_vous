@@ -10,13 +10,10 @@ import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.shareddata.SharedData;
 import org.vertx.java.platform.Verticle;
 
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -59,11 +56,12 @@ public class Server extends Verticle {
                             container.logger().info(event.body());
                             if(event.body().getInteger("number")==1){
                                 point.setInstaToken(((JsonObject)event.body().getArray("results").get(0)).getString("insta_key"));
-                                eb.send("instagram.service", point.toJSON(), new Handler<Message<String>>() {
+                                eb.send("instagram.service", point.toJSON(), new Handler<Message<JsonObject>>() {
                                     @Override
-                                    public void handle(Message<String> eventBusResponse) {
-                                        JsonObject ob = new JsonObject(eventBusResponse.body().toString());
-                                        clientRequest.response().end(ob.getArray("data").toString());
+                                    public void handle(Message<JsonObject> eventBusResponse) {
+                                        //JsonObject ob = new JsonObject(eventBusResponse.body().toString());
+                                        //clientRequest.response().end(ob.getArray("data").toString());
+                                        clientRequest.response().end(eventBusResponse.body().encodePrettily());
                                     }
                                 });
                             }else{
@@ -155,10 +153,32 @@ public class Server extends Verticle {
         });
 
 
-        routeMatcher.get("/twitter/", new Handler<HttpServerRequest>() {
+
+
+        routeMatcher.get("/twitter/:code", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest clientRequest) {
-
+                String code = clientRequest.params().get("code");
+                MultiMap params = clientRequest.params();
+                container.logger().info(clientRequest.params().names().toString());
+                if(code.equals("null"))code="";
+                JsonObject req = new JsonObject();
+                req.putString("code",code);
+                if(code.equals("ok")){
+                    req.putString("oauth_token", params.get("oauth_token"));
+                    req.putString("oauth_verifier",params.get("oauth_verifier"));
+                }
+                eb.send("twitter.token", req, new Handler<Message<JsonObject>>() {
+                    @Override
+                    public void handle(Message<JsonObject> event) {
+                        container.logger().info("request: "+event.body().toString());
+                        if(event.body().getString("redirect")!=null) {
+                            clientRequest.response().putHeader("Location", event.body().getString("redirect"));
+                            clientRequest.response().setStatusCode(302);
+                        }
+                        clientRequest.response().end(event.body().toString());
+                    }
+                });
             }
         });
 

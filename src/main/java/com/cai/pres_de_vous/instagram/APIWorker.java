@@ -7,6 +7,7 @@ import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientResponse;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -64,8 +65,51 @@ public class APIWorker extends Verticle {
                         response.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
+                                //container.logger().info("data: "+body.toString());
+                                JsonObject instaResp = new JsonObject(body.toString());
+                                JsonObject response = new JsonObject();
+                                if(instaResp.getObject("meta").getInteger("code")==200){
+                                    response.putValue("code",200);
 
-                                message.reply(body.toString());
+                                    JsonArray list = instaResp.getArray("data");
+                                    JsonArray array = new JsonArray();
+                                    for(int i=0; i<list.size();i++){
+                                        JsonObject instaPhoto = list.get(i);
+                                        JsonObject photo = new JsonObject();
+                                        // la photo vient d'instagram
+                                        photo.putString("source","instagram");
+                                        // où à été prise la photo
+                                        photo.putObject("location",instaPhoto.getObject("location"));
+                                        // lien instagram de la photo
+                                        photo.putString("link", instaPhoto.getString("link"));
+
+                                        // attributs de l'image
+                                        JsonObject img = new JsonObject();
+                                        JsonObject p = instaPhoto.getObject("images").getObject("standard_resolution");
+                                        img.putString("url",p.getString("url"));
+                                        img.putValue("width", p.getInteger("width"));
+                                        img.putValue("height",p.getInteger("height"));
+                                        photo.putObject("image",img);
+
+                                        // attributs de l'auteur
+                                        JsonObject author = new JsonObject();
+                                        if(instaPhoto.getObject("caption")!=null) {
+                                            JsonObject instaAuthor = instaPhoto.getObject("caption").getObject("from");
+
+                                            author.putString("username", instaAuthor.getString("username"));
+                                            author.putString("profile_picture", instaAuthor.getString("profile_picture"));
+                                            photo.putObject("author", author);
+                                            array.add(photo);
+                                        }
+
+
+
+                                    }
+                                    response.putArray("results",array);
+                                }else{
+                                    response.putValue("code", 400);
+                                }
+                                message.reply(response);
                             }
                         });
                     }
