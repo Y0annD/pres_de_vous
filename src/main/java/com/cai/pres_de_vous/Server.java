@@ -44,18 +44,18 @@ public class Server extends Verticle {
                 String lng = clientRequest.params().get("lng");
                 JsonObject usr = new JsonObject();
                 container.logger().info("cookie: "+cookie);
-                if(cookie!=null)
-                    usr.putString("token",cookie.substring(cookie.indexOf("=")+1));
+                //if(cookie!=null)
+                //    usr.putString("token",cookie.substring(cookie.indexOf("=")+1));
                 usr.putString("action","FIND");
                 final GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
                 if(point.isValid()) {
-                    eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
-                       @Override
+                    //eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
+                      // @Override
 
-                        public void handle(Message<JsonObject> event) {
-                            container.logger().info(event.body());
-                            if(event.body().getInteger("number")==1){
-                                point.setInstaToken(((JsonObject)event.body().getArray("results").get(0)).getString("insta_key"));
+                        //public void handle(Message<JsonObject> event) {
+                         //   container.logger().info(event.body());
+                         //   if(event.body().getInteger("number")==1){
+                         //       point.setInstaToken(((JsonObject)event.body().getArray("results").get(0)).getString("insta_key"));
                                 eb.send("instagram.service", point.toJSON(), new Handler<Message<JsonObject>>() {
                                     @Override
                                     public void handle(Message<JsonObject> eventBusResponse) {
@@ -64,11 +64,11 @@ public class Server extends Verticle {
                                         clientRequest.response().end(eventBusResponse.body().encodePrettily());
                                     }
                                 });
-                            }else{
-                                clientRequest.response().end("Tu n'est pas autorisé jeune padawan");
-                            }
-                        }
-                    });
+                          //  }else{
+                           //     clientRequest.response().end("Tu n'est pas autorisé jeune padawan");
+                            //}
+                        //}
+                    //});
 
 
 
