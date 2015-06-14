@@ -86,8 +86,11 @@ public class Server extends Verticle {
                 String lat = event.params().get("lat");
                 String lng = event.params().get("lng");
                 GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
+                JsonObject jsPoint = point.toJSON();
+                jsPoint.putNumber("perimetre", 500);
+                //container.logger().info(jsPoint.toString());
                 if(point.isValid()) {
-                    eb.send("google.service", point.toJSON(), new Handler<Message<String>>() {
+                    eb.send("google.service", jsPoint, new Handler<Message<String>>() {
                         @Override
                         public void handle(Message<String> eventBusResponse) {
 

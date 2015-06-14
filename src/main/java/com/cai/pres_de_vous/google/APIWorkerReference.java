@@ -17,6 +17,7 @@ import org.vertx.java.platform.Verticle;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -44,11 +45,14 @@ public class APIWorkerReference extends Verticle {
 
             @Override
             public void handle(final Message<JsonObject> message) {
-
-
                 counter = 0;
-                String link = "/maps/api/place/nearbysearch/json?location="+message.body().getString("latitude")+","+message.body().getString("longitude")+"&radius=500&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
-                container.logger().info("link: " + link);
+                String lat = message.body().getString("latitude");
+                String lng = message.body().getString("longitude");
+                Integer perim = message.body().getInteger("perimetre");
+
+                String link = "/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius="+perim+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+                System.out.println("link: "+link);
+
                 client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
 
                 client.getNow(link, new Handler<HttpClientResponse>() {
@@ -66,38 +70,62 @@ public class APIWorkerReference extends Verticle {
                         response.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
-                               // container.logger().info("BLAHBLAHBLAHBLAHBLAHBLAH");
                                 JsonObject obj = new JsonObject(body.toString());
                                 JsonArray refPhotos = listReferencesPhotos(obj);
-                                java.util.List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
 
-                                for(int i=0; i<refPhotos.size(); i++){ //On récupère ici les references des photos une par une
-                                    JsonObject ref_photo = refPhotos.get(i);
-                                    ref_photo.putNumber("number", counter);
-                                    container.logger().info("Ici on envoie la référence suivante : "+ref_photo.toString());
-                                    //container.logger().info("Nous avons récupéré une référence : "+ref_photo+". Nous allons maintenant recupérer sa photo");
+                                // Cas où on ne trouve pas de photos dans notre périmètre : On élargie la recherche
+                                if(refPhotos.size() == 0){
+                                    JsonObject point = new JsonObject();
+                                    point.putString("latitude", lat);
+                                    point.putString("longitude", lng);
+                                    point.putNumber("perimetre", (perim + (500)));
+                                    //container.logger().info("On lance un requete imbriquée !!!! ");
 
-
-                                    promises.add(whenEventBus.sendWithTimeout("google.servicePhoto", ref_photo, 15000));
+                                    List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
+                                    promises.add(whenEventBus.sendWithTimeout("google.serviceRef", point, 15000));
 
                                     //container.logger().info(when.toString());
                                     when.all(promises).then(
                                             replies -> {
                                                 // On success
-                                                //container.logger().info("success in converting reference to photo "+counter+" !!!!!!!!!!!!!!!!!!!!!!!!!");
-
-                                                    message.reply();
+                                                message.reply();
                                                 return null;
                                             },
                                             t -> {
                                                 // On fail
-                                                //container.logger().info("error in converting reference to photo !!!!!!!!!!!!!!!!!!!!!!!!!");
+                                                container.logger().info("error !!!!!!!!!!!!!!!!!!!!!!!!!");
                                                 return null;
                                             });
+                                }else{
+                                    //container.logger().info("On lance une requete Worker Reference !!!! ");
+                                    java.util.List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
 
-                                    counter++;
+                                    for(int i=0; i<refPhotos.size(); i++){ //On récupère ici les references des photos une par une
+                                        JsonObject ref_photo = refPhotos.get(i);
+                                        ref_photo.putNumber("number", counter);
+                                        //container.logger().info("Ici on envoie la référence suivante : "+ref_photo.toString());
+                                        //container.logger().info("Nous avons récupéré une référence : "+ref_photo+". Nous allons maintenant recupérer sa photo");
+
+                                        promises.add(whenEventBus.sendWithTimeout("google.servicePhoto", ref_photo, 15000));
+
+                                        //container.logger().info(when.toString());
+                                        when.all(promises).then(
+                                                replies -> {
+                                                    // On success
+                                                    //container.logger().info("success in converting reference to photo "+counter+" !!!!!!!!!!!!!!!!!!!!!!!!!");
+
+                                                    message.reply();
+                                                    return null;
+                                                },
+                                                t -> {
+                                                    // On fail
+                                                    //container.logger().info("error in converting reference to photo !!!!!!!!!!!!!!!!!!!!!!!!!");
+                                                    return null;
+                                                });
+
+                                        counter++;
+                                    }
                                 }
-
                                 //container.logger().info("On finit notre bordel !!!!!!!");
 
                                 //map.put(0, refPhotos);
