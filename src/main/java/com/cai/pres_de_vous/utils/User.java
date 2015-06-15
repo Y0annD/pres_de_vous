@@ -181,7 +181,7 @@ public class User {
 
     /**
      * Create MongoDB request to find wether user can login or not
-     * @return
+     * @return Requete de connection
      */
     public JsonObject sign_in(){
         JsonObject req = new JsonObject();

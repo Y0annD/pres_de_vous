@@ -14,20 +14,35 @@ import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.platform.Verticle;
-
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Created by crocus on 30/05/15.
+ * API WorkerReference appelée par l'API Worker de google vient récupérer la liste des références de places et fait appel à l'APIWorkerPhoto
+ * Created by math29 on 30/05/15.
+ * @author math29
+ * @version 1.0
+ * @see APIWorker
+ * @see APIWorkerPhoto
  */
 public class APIWorkerReference extends Verticle {
-
+    /**
+     * HttpClient permettant de faire un appel à l'API google Places
+     * @see APIWorkerReference#start()
+     */
     private HttpClient client;
+
+    /**
+     * Compteur qui permet par la suite de synchroniser nos objets récupérés avec l'API Google Places avec les URLs récupérées par la suite
+     * @see APIWorkerPhoto#start()
+     * @see APIWorker#start()
+     */
     private int counter;
 
+    /**
+     * Start de notre API Worker References
+     */
     @Override
     public void start() {
         super.start();
@@ -42,6 +57,10 @@ public class APIWorkerReference extends Verticle {
 
         Handler<Message<JsonObject>> apiHandler = new Handler<Message<JsonObject>>() {
 
+            /**
+             * Handler de notre API qui fait appel à l'API google Places
+             * @param message
+             */
             @Override
             public void handle(final Message<JsonObject> message) {
 
@@ -144,6 +163,13 @@ public class APIWorkerReference extends Verticle {
         eb.registerHandler("google.serviceRef", apiHandler);
     }
 
+    /**
+     * Fonction qui stock dans notre Share data le squelette du format JSON que l'on souhaite retourner avant la réception de l'URL des images
+     * Pour ce faire nous utilisons la méthode formatResponse
+     * @param obj JSonObject contenant la réponse de l'API Google Places
+     * @return JsonArray
+     * @see APIWorkerReference#formatResponse(JsonObject, JsonObject)
+     */
     public JsonArray listReferencesPhotos(JsonObject obj){
         int counter = 0;
         ConcurrentMap<Integer, String> refs = vertx.sharedData().getMap("worker.references");
@@ -165,14 +191,18 @@ public class APIWorkerReference extends Verticle {
                 }
             }
         }
-        //container.logger().info(listeReferences);
         return listeReferences;
     }
 
+    /**
+     * Fonction qui va réellement créer le squelette de base de notre réponse JSON. Appelée par listReferencesPhotos()
+     * @param obj JsonObject contenant notre object récupéré par l'API Google
+     * @param photo JsonObject
+     * @return JsonObject
+     * @see APIWorkerReference#listReferencesPhotos(JsonObject)
+     */
     public JsonObject formatResponse(JsonObject obj, JsonObject photo){
         JsonObject returnPhoto = new JsonObject();
-        //container.logger().info("On recoit ceci comme obj : "+obj.toString());
-        //container.logger().info("On recoit ceci comme photo : " + photo.toString());
 
         // SOURCE
         returnPhoto.putString("source", "google");
@@ -196,9 +226,6 @@ public class APIWorkerReference extends Verticle {
         JsonObject author = new JsonObject();
         author.putString("username", obj.getString("name"));
         returnPhoto.putObject("author", author);
-
-        //container.logger().info("On renvoie ceci : "+returnPhoto.toString());
-        //String reference = photo.getString("photo_reference");  // Pour chaque photo on récupère sa référence
 
         return returnPhoto;
     }
