@@ -1,6 +1,6 @@
 {
   "name": "hydrolysis",
-  "private": true,
+  "main": "hydrolysis.js",
   "ignore": [
     "lib/",
     "examples/",
@@ -15,13 +15,13 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
     "web-component-tester": "*"
   },
-  "version": "1.13.1",
+  "version": "1.14.1",
   "homepage": "https://github.com/Polymer/hydrolysis",
-  "_release": "1.13.1",
+  "_release": "1.14.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.13.1",
-    "commit": "2b45e64292fd7a7cfd02340e47309e825d8028ce"
+    "tag": "v1.14.1",
+    "commit": "9621cda022a9e9acbfa17d94eb0f080f19a7f598"
   },
   "_source": "git://github.com/Polymer/hydrolysis.git",
   "_target": "^1.11",

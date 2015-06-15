@@ -13,25 +13,54 @@
         }
     </style>
     <template>
-        <post-service lat="{{lat}}" lng="{{lng}}" posts="{{posts}}"></post-service>
-
-        <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" zoom="15">
-            <template is="dom-repeat" items="{{posts}}">
+        <!-- <post-service prov="google" lat="{{lat}}" lng="{{lng}}" posts="{{posts.google}}"></post-service> -->
+        <post-service prov="twitter" lat="{{lat}}" lng="{{lng}}" posts="{{posts.twitter}}"></post-service>
+        <!-- <post-service prov="insta" lat="{{lat}}" lng="{{lng}}" posts="{{posts.insta}}"></post-service> -->
+		
+        <google-map disable-default-ui fit-to-markers latitude="{{lat}}" longitude="{{lng}}" zoom="15">
+			
+            <template is="dom-repeat" items="{{posts.twitter.results}}">
                 <google-map-marker
-                        latitude="{{item.location.latitude}}"
-                        longitude="{{item.location.longitude}}"
-                        title="{{item.location.name}}">
+					latitude="{{item.location.latitude}}"
+					longitude="{{item.location.longitude}}"
+					title="{{item.text}}">
+						
+					<post-card
+						favorite="{{item.favorite}}"
+						on-favorite-tap="{{handleFavorite}}"
+						hidden?="{{show == 'favorites' && !post.favorite}}">
+						
+						<img class="round" src="{{item.author.profile_picture}}" width="70" height="70">
+						<h2>{{item.author.username}}</h2>
+						<p>{{item.text}}</p><br /><br />
+						<img src="{{item.link}}" alt="{{item.text}}" />
+							
+					</post-card>
+					
+                </google-map-marker>
+            </template>
+			
+            <!-- <template is="dom-repeat" items="{{posts.insta.data}}">
+                <google-map-marker
+					latitude="{{item.location.latitude}}"
+					longitude="{{item.location.longitude}}"
+					title="{{item.location.name}}">
+					
                     <post-card
                         favorite="{{item.favorite}}"
                         on-favorite-tap="{{handleFavorite}}"
                         hidden?="{{show == 'favorites' && !post.favorite}}">
+						
                         <img class="round" src="{{item.user.profile_picture}}" width="70" height="70">
-                        <!--<h2>{{item.user.username}}</h2>
-                        <p>{{item.text}}</p><br />--><br />
+                        <h2>{{item.user.username}}</h2>
+                        <p>{{item.text}}</p><br /><br />
                         <img src="{{item.images.low_resolution.url}}" alt="{{item.location.name}}" />
+						
                     </post-card>
+					
                 </google-map-marker>
-            </template>
+            </template> -->
+			
         </google-map>
     </template>
     <script>
@@ -40,8 +69,8 @@
 
             properties: {
                 posts: {
-                    type: Array,
-                    value: []
+                    type: Object,
+                    value: {}
                 },
                 lat: {
                     type: Number,

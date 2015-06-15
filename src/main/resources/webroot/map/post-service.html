@@ -13,7 +13,7 @@
     <template>
         <iron-ajax
             auto
-            url="{{computeJsonUrl(lat, lng)}}"
+            url="{{computeJsonUrl(prov, lat, lng)}}"
             handle-as="json"
             on-response="postsLoaded">
         </iron-ajax>
@@ -28,17 +28,18 @@
                     value: [],
                     notify: true
                 },
+				prov: String,
                 lat: Number,
                 lng: Number
             },
 
-            computeJsonUrl: function(latitude, longitude) {
-                return '../insta/'+latitude+'/'+longitude;
+            computeJsonUrl: function(provider, latitude, longitude) {
+                return '../'+provider+'/'+latitude+'/'+longitude;
             },
 
             postsLoaded: function(request) {
                 // Make a copy of the loaded data
-                this.posts = request.detail.response.data;
+                this.posts = request.detail.response;
             },
 
             /**
@@ -53,7 +54,6 @@
              */
             setFavorite: function(uid, isFavorite) {
                 // no service backend, just log the change
-                console.log('Favorite changed: ' + uid + ", now: " + isFavorite);
             }
         });
     </script>
