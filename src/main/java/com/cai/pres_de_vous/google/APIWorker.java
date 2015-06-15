@@ -28,6 +28,8 @@ public class APIWorker extends Verticle{
     public void start() {
         super.start();
         ConcurrentMap<Integer, String> map = vertx.sharedData().getMap("worker.photo");
+        ConcurrentMap<Integer, String> refs = vertx.sharedData().getMap("worker.references");
+        ConcurrentMap<Integer, Integer> error = vertx.sharedData().getMap("worker.error");
 
 
         VertxExecutor executor = new VertxExecutor(vertx);
@@ -48,24 +50,35 @@ public class APIWorker extends Verticle{
                 when.all(promises).then(
                         replies -> {
                             // On success
-                            //container.logger().info(replies.size());
-                    /*        Iterator<Message<JsonObject>> it = replies.iterator();
-                            while(it.hasNext()) {
-                                Message<JsonObject> m = it.next();
-                                container.logger().info("Le reponse est :"+m.body().toString());
-                            }*/
-                            for(int i = 0; i<map.size(); i++) {
-                                response.putString("photo"+i, map.get(i));
-                                //container.logger().info("Le reponse est : " +map.get(i));
-
+                            if(error.get(0) == null){
+                                JsonObject photo;
+                                String url;
+                                JsonArray results = new JsonArray();
+                                for(int i = 0; i<map.size(); i++) {
+                                    photo = new JsonObject(refs.get(i));
+                                    url = map.get(i);
+                                    photo.getObject("image").putString("url", url);
+                                    photo.getObject("author").putString("profile_picture", url);
+                                    results.addObject(photo);
+                                    //container.logger().info("Le JSonObject desencodé : " + photo);
+                                }
+                                response.putValue("code", 200);
+                                response.putArray("results", results);
+                                //container.logger().info("Yes we did it !!!!!!!!!!!!!!!!!!!!!!!!! LA reponse est :"+response.toString());
+                                message.reply(response.toString());
+                                return null;
+                            }else{
+                                response.putValue("code", 400);
+                                response.putArray("results", new JsonArray());
+                                message.reply(response.toString());
+                                return null;
                             }
-                            container.logger().info("Yes we did it !!!!!!!!!!!!!!!!!!!!!!!!! LA reponse est :"+response.toString());
-                            message.reply(response.toString());
-                            return null;
                         },
                         t -> {
                             // On fail
-                            container.logger().info("error !!!!!!!!!!!!!!!!!!!!!!!!!");
+                            response.putValue("code", 400);
+                            response.putArray("results", new JsonArray());
+                            message.reply(response.toString());
                             return null;
                         });
             }
