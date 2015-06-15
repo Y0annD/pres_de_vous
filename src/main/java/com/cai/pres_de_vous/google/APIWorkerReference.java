@@ -41,10 +41,10 @@ public class APIWorkerReference extends Verticle {
         DefaultWhenEventBus whenEventBus = new DefaultWhenEventBus(eb, when);
 
         Handler<Message<JsonObject>> apiHandler = new Handler<Message<JsonObject>>() {
-            String response = "";
 
             @Override
             public void handle(final Message<JsonObject> message) {
+
                 counter = 0;
                 String lat = message.body().getString("latitude");
                 String lng = message.body().getString("longitude");
@@ -93,13 +93,15 @@ public class APIWorkerReference extends Verticle {
                                             },
                                             t -> {
                                                 // On fail
-                                                container.logger().info("error !!!!!!!!!!!!!!!!!!!!!!!!!");
+                                                //container.logger().info("error !!!!!!!!!!!!!!!!!!!!!!!!!");
+                                                ConcurrentMap<Integer, Integer> error = vertx.sharedData().getMap("worker.error");
+                                                error.put(0, 1);
+                                                message.reply();
                                                 return null;
                                             });
                                 }else{
                                     //container.logger().info("On lance une requete Worker Reference !!!! ");
                                     java.util.List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
-
                                     for(int i=0; i<refPhotos.size(); i++){ //On récupère ici les references des photos une par une
                                         JsonObject ref_photo = refPhotos.get(i);
                                         ref_photo.putNumber("number", counter);
@@ -113,13 +115,15 @@ public class APIWorkerReference extends Verticle {
                                                 replies -> {
                                                     // On success
                                                     //container.logger().info("success in converting reference to photo "+counter+" !!!!!!!!!!!!!!!!!!!!!!!!!");
-
                                                     message.reply();
                                                     return null;
                                                 },
                                                 t -> {
                                                     // On fail
                                                     //container.logger().info("error in converting reference to photo !!!!!!!!!!!!!!!!!!!!!!!!!");
+                                                    ConcurrentMap<Integer, Integer> error = vertx.sharedData().getMap("worker.error");
+                                                    error.put(0, 1);
+                                                    message.reply();
                                                     return null;
                                                 });
 
@@ -141,25 +145,61 @@ public class APIWorkerReference extends Verticle {
     }
 
     public JsonArray listReferencesPhotos(JsonObject obj){
+        int counter = 0;
+        ConcurrentMap<Integer, String> refs = vertx.sharedData().getMap("worker.references");
         JsonArray listeReferences = new JsonArray();
         JsonArray results = obj.getArray("results");    // On récupère la liste des lieux autours de nous
-        container.logger().info("json: "+obj.toString());
         for(int i=0; i < results.size(); i++){
             JsonObject result = results.get(i);
             JsonArray photos = result.getArray("photos");   // Pour chaque lieu on récupère la liste des photos associées si elles exitent
-
             if(photos != null){
                 for(int j=0; j < photos.size(); j++){
                     JsonObject photo = photos.get(j);
                     String reference = photo.getString("photo_reference");  // Pour chaque photo on récupère sa référence
                     if(reference != null){
                         listeReferences.addObject(photo);
-                        // container.logger().info(reference);
+                        JsonObject imgDes = formatResponse(result, photo);
+                        refs.put(counter, imgDes.encode());
+                        counter++;
                     }
                 }
             }
         }
         //container.logger().info(listeReferences);
         return listeReferences;
+    }
+
+    public JsonObject formatResponse(JsonObject obj, JsonObject photo){
+        JsonObject returnPhoto = new JsonObject();
+        //container.logger().info("On recoit ceci comme obj : "+obj.toString());
+        //container.logger().info("On recoit ceci comme photo : " + photo.toString());
+
+        // SOURCE
+        returnPhoto.putString("source", "google");
+
+        // LOCATION TRANSLATION
+        JsonObject objLocation = new JsonObject();
+        objLocation.putValue("latitude", obj.getObject("geometry").getObject("location").getValue("lat"));
+        objLocation.putValue("longitude", obj.getObject("geometry").getObject("location").getValue("lng"));
+        returnPhoto.putObject("location", objLocation);
+
+        // LINK
+        returnPhoto.putString("link", "");
+
+        // IMAGE
+        JsonObject img = new JsonObject();
+        img.putValue("width", photo.getValue("width"));
+        img.putValue("height", photo.getValue("height"));
+        returnPhoto.putObject("image", img);
+
+        // AUTHOR
+        JsonObject author = new JsonObject();
+        author.putString("username", obj.getString("name"));
+        returnPhoto.putObject("author", author);
+
+        //container.logger().info("On renvoie ceci : "+returnPhoto.toString());
+        //String reference = photo.getString("photo_reference");  // Pour chaque photo on récupère sa référence
+
+        return returnPhoto;
     }
 }
