@@ -1,0 +1,100 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/google-apis/google-maps-api.html">
+
+<dom-module id="search-box">
+	<style>
+		/*.form-control {
+			display: block;
+			
+			width: 100%;
+			height: 34px;
+			
+			padding: 6px 12px;
+			
+			font-size: 14px;
+			
+			line-height: 1.42857143;
+			
+			color: #555555;
+			background-color: #ffffff;
+			background-image: none;
+			
+			border: 1px solid #cccccc;
+			border-radius: 4px;
+			
+			-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+			-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+			transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+		}*/
+:host {
+    background: #fff;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    z-index: 100;
+}
+
+#autocomplete {
+    border: 0px;
+    margin-top: 5px;
+    width: 200px;
+}
+	</style>
+	<template>
+		<google-maps-api
+		  api-key="[[apiKey]]"
+		  client-id="[[clientId]]"
+		  version="[[version]]"
+		  libraries="[[libraries]]"
+		  signed-in="[[signedIn]]"
+		  language="[[language]]"
+		  on-api-load="_mapApiLoaded"></google-maps-api>
+		<input id="autocomplete" placeholder="Enter your address first time" type="text" class="form-control"></input>
+    </template>
+    <script>
+		Polymer({
+			is: 'search-box',
+			
+			properties: {
+				apiKey: String,
+				clientId: String,
+				version: {
+					type: String,
+					value: '3.exp'
+				},
+				libraries: {
+					type: String,
+					value: 'places'
+				},
+				signedIn: {
+					type: Boolean,
+					value: false
+				},
+				language: {
+					type: String
+				},
+				location: {
+					type: String,
+					value: '',
+					notify: true,
+					reflectToAttribute: true
+				},
+				autocomplete: {
+					type: Object,
+					value: null
+				}
+			},
+
+			_mapApiLoaded: function() {
+				console.log('OK');
+				/*this.autocomplete= new google.maps.places.Autocomplete(this.$.autocomplete);
+				google.maps.event.addListener(this.autocomplete, 'place_changed', function() {
+					var place = this.autocomplete.getPlace();
+					this.location = place.formatted_address;
+				}.bind(this));*/
+			}
+		});
+    </script>
+</dom-module>
