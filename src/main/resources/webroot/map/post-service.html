@@ -21,6 +21,10 @@
             is: 'post-service',
 
             properties: {
+				fakeApi: {
+					type: String,
+					value: ''
+				},
                 posts: {
                     type: Array,
                     value: [],
@@ -32,7 +36,9 @@
             },
 
             computeJsonUrl: function(provider, latitude, longitude) {
-                return '../'+provider+'/'+latitude+'/'+longitude;
+				if (this.fakeApi)
+					return this.fakeApi;
+				return '../'+provider+'/'+latitude+'/'+longitude;
             },
 
             postsLoaded: function(request) {
