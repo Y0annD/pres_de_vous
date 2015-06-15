@@ -39,6 +39,7 @@ public class APIWorkerReference extends Verticle {
      * @see APIWorker#start()
      */
     private int counter;
+    private int elargCounter = 0;
 
     /**
      * Start de notre API Worker References
@@ -93,7 +94,8 @@ public class APIWorkerReference extends Verticle {
                                 JsonArray refPhotos = listReferencesPhotos(obj);
 
                                 // Cas où on ne trouve pas de photos dans notre périmètre : On élargie la recherche
-                                if(refPhotos.size() == 0){
+                                if(refPhotos.size() == 0 && elargCounter < 2){
+                                    elargCounter++;
                                     JsonObject point = new JsonObject();
                                     point.putString("latitude", lat);
                                     point.putString("longitude", lng);
@@ -119,7 +121,7 @@ public class APIWorkerReference extends Verticle {
                                                 return null;
                                             });
                                 }else{
-                                    //container.logger().info("On lance une requete Worker Reference !!!! ");
+                                    elargCounter = 0;
                                     java.util.List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
                                     for(int i=0; i<refPhotos.size(); i++){ //On récupère ici les references des photos une par une
                                         JsonObject ref_photo = refPhotos.get(i);
