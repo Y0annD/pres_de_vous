@@ -1,6 +1,8 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/google-map/google-map.html">
 <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="bower_components/neon-animation/animations/fade-out-animation.html">
 
 <link rel="import" href="post-service.html">
 <link rel="import" href="post-card.html">
@@ -14,17 +16,6 @@
         }
     </style>
     <template>
-		<!-- <paper-dialog>
-			<h2>Header</h2>
-			<paper-dialog-scrollable>
-				Lorem ipsum...
-			</paper-dialog-scrollable>
-			<div class="buttons">
-				<paper-button dialog-dismiss>Cancel</paper-button>
-				<paper-button dialog-confirm>Accept</paper-button>
-			</div>
-		</paper-dialog> -->
-
 		<!-- POUR SIMU OFFLINE (fake API) : Ajouter fake-api="path/to/static-data.json" dans le tag post-service désiré (le format du JSON doit être compatible). -->
 		
         <!-- <post-service prov="google" lat="{{lat}}" lng="{{lng}}" posts="{{posts.google}}"></post-service> -->
@@ -34,7 +25,7 @@
         <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" draggable="false" zoom="15" max-zoom="15" min-zoom="15" language="fr">
 			
             <template is="dom-repeat" items="{{posts.google.results}}">
-                <google-map-marker
+                <google-map-marker id="{{computeIndex('google', 'marker', index)}}"
 					icon="img/gmark-small.png"
 					latitude="{{item.location.latitude}}"
 					longitude="{{item.location.longitude}}"
@@ -42,20 +33,11 @@
 					click-events="true"
 					on-google-map-marker-click="markerHandler"
 					language="fr">
-					
-                    <post-card>
-                        <img class="round" src="{{item.author.profile_picture}}" width="70" height="70">
-                        <h2>{{item.author.username}}</h2>
-                        <p>{{item.location.name}}}}</p><br />
-						<img src="{{item.image.url}}" alt="{{item.author.username}}" />
-						<a href="{{item.link}}" title="{{item.location.name}}">{{item.link}}</a>
-                    </post-card>
-					
                 </google-map-marker>
             </template>
 			
             <template is="dom-repeat" items="{{posts.twitter.results}}">
-                <google-map-marker
+                <google-map-marker id="{{computeIndex('twitter', 'marker', index)}}"
 					icon="img/tmark-small.png"
 					latitude="{{item.location.latitude}}"
 					longitude="{{item.location.longitude}}"
@@ -63,19 +45,11 @@
 					click-events="true"
 					on-google-map-marker-click="markerHandler"
 					language="fr">
-						
-					<post-card>
-						<img class="round" src="{{item.author.profile_picture}}" width="70" height="70">
-						<h2>{{item.author.username}}</h2>
-						<p>{{item.text}}</p><br />
-						<a href="{{item.link}}" title="{{item.text}}">{{item.link}}</a>
-					</post-card>
-					
                 </google-map-marker>
             </template>
 			
             <template is="dom-repeat" items="{{posts.insta.results}}">
-                <google-map-marker
+                <google-map-marker id="{{computeIndex('insta', 'marker', index)}}"
 					icon="img/imark-small.png"
 					latitude="{{item.location.latitude}}"
 					longitude="{{item.location.longitude}}"
@@ -83,19 +57,39 @@
 					click-events="true"
 					on-google-map-marker-click="markerHandler"
 					language="fr">
-					
-                    <post-card>
-                        <img class="round" src="{{item.author.profile_picture}}" width="70" height="70">
-                        <h2>{{item.author.username}}</h2>
-                        <p>{{item.location.name}}}}</p><br />
-						<img src="{{item.image.url}}" alt="{{item.location.name}}" />
-						<a href="{{item.link}}" title="{{item.location.name}}">{{item.link}}</a>
-                    </post-card>
-					
                 </google-map-marker>
             </template>
 			
         </google-map>
+		
+		<paper-dialog id="google-dialog" data="{{dialogData}}" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+				<post-card>
+					<img class="round" src="{{dialogData.author.profile_picture}}" width="70" height="70">
+					<h2>{{dialogData.author.username}}</h2>
+					<p>{{dialogData.location.name}}}}</p><br />
+					<img src="{{dialogData.image.url}}" alt="{{dialogData.author.username}}" />
+					<a href="{{dialogData.link}}" title="{{dialogData.location.name}}">{{dialogData.link}}</a>
+				</post-card>
+		</paper-dialog>
+		
+		<paper-dialog id="twitter-dialog" data="{{dialogData}}" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+				<post-card>
+					<img class="round" src="{{dialogData.author.profile_picture}}" width="70" height="70">
+					<h2>{{dialogData.author.username}}</h2>
+					<p>{{dialogData.text}}</p><br />
+					<a href="{{dialogData.link}}" title="{{dialogData.text}}">{{dialogData.link}}</a>
+				</post-card>
+		</paper-dialog>
+		
+		<paper-dialog id="insta-dialog" data="{{dialogData}}" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+				<post-card>
+					<img class="round" src="{{dialogData.author.profile_picture}}" width="70" height="70">
+					<h2>{{dialogData.author.username}}</h2>
+					<p>{{dialogData.location.name}}}}</p><br />
+					<img src="{{dialogData.image.url}}" alt="{{dialogData.location.name}}" />
+					<a href="{{dialogData.link}}" title="{{dialogData.location.name}}">{{dialogData.link}}</a>
+				</post-card>
+		</paper-dialog>
 		
 		<search-box language="fr" lat="{{lat}}" lng="{{lng}}" on-search="searchHandler"></search-box>
     </template>
@@ -119,17 +113,29 @@
                     value: 0,
 					notify: true,
 					reflectToAttribute: true
-                }
+                },
+				dialogData: {
+					type: Object,
+					value: null
+				}
             },
 			
 			observers: [
 				'geoChanged(lat, lng)'
 			],
 			
-			markerHandler: function(e, detail, sender) {
-				console.log(e);
-				console.log(detail);
-				console.log(sender);
+			markerHandler: function(marker) {
+				var id = marker.target.id;
+				var idArray = id.split('-');
+				this.dialogData = this.posts[idArray[0]].results[idArray[2]];
+				
+				id = idArray[0]+'-dialog';
+				var dialog = this.$$('#'+id);
+				dialog.toggle();
+			},
+			
+			computeIndex: function(prov, tag, index) {
+				return prov+'-'+tag+'-'+index;
 			},
 			
 			geoChanged: function(lat, lng) {
