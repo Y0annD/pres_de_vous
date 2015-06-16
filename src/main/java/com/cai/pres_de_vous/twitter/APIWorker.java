@@ -1,5 +1,6 @@
 package com.cai.pres_de_vous.twitter;
 
+import com.cai.pres_de_vous.Credentials;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.TwitterApi;
 import org.scribe.model.*;
@@ -10,6 +11,9 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
+
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 
 /**
  * Created by crocus on 14/06/15.
@@ -26,13 +30,35 @@ public class APIWorker extends Verticle {
 
         EventBus eb = vertx.eventBus();
 
+        final String authUser = Credentials.username;
+        final String authPassword = Credentials.password;
+        Authenticator.setDefault(
+                new Authenticator() {
+                    public PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(
+                                authUser, authPassword.toCharArray());
+                    }
+                }
+        );
+        System.setProperty("http.proxyHost", Credentials.proxyHost);
+        System.setProperty("http.proxyPort",""+Credentials.proxyPort);
+        System.setProperty("http.proxyUser", authUser);
+        System.setProperty("http.proxyPassword", authPassword);
+        System.setProperty("https.proxyHost",Credentials.proxyHost);
+        System.setProperty("https.proxyPort",""+Credentials.proxyPort);
+        System.setProperty("https.proxyUser", authUser);
+        System.setProperty("https.proxyPassword", authPassword);
+
         Handler<Message<JsonObject>> twitterHandler = new Handler<Message<JsonObject>>() {
             @Override
             public void handle(Message<JsonObject> event) {
+
+
                 OAuthService service = new ServiceBuilder().provider(TwitterApi.class)
                         .apiKey("dUwKQI88r79uh1QXM28RrtOQ2")
                         .apiSecret("fDvVB8oAqjbqBhfP8va1nRCoqfJohmQ7f6f6xCkTGZn78niAgp")
                         .build();
+
 
                 String PROTECTED_RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json?q=%20&geocode="+event.body().getValue("latitude")+"%2C"+event.body().getValue("longitude")+"%2C10km";
 
@@ -43,11 +69,12 @@ public class APIWorker extends Verticle {
 
                 OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
 
+                //request.addHeader("Proxy-Authorisation","Basic eTFkaXF1ZWw6Rm56KjUwNDZ0Zj8=");
+
                 service.signRequest(accessToken, request);
+
                 Response response = request.send();
-                System.out.println("Got it! Lets see what we found...");
-                System.out.println();
-                System.out.println(response.getBody());
+
 
                 /**
                  * Traitement de la réponse
@@ -81,7 +108,6 @@ public class APIWorker extends Verticle {
 
                     }
                     resp.putArray("results",respArray);
-                    container.logger().info("response: "+resp.toString());
                 }else{
                     resp.putValue("code", 400);
                 }

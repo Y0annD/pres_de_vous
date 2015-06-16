@@ -1,6 +1,6 @@
 package com.cai.pres_de_vous.instagram;
 
-import com.cai.pres_de_vous.utils.User;
+import com.cai.pres_de_vous.Credentials;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.EventBus;
@@ -12,7 +12,6 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by crocus on 30/05/15.
@@ -37,10 +36,12 @@ public class APIWorker extends Verticle {
                 //String cookie = message.body().getString("cookie");
 
                 //User user = new User(new JsonObject(map.get(cookie)));
-                //1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626
-                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
+                String link = "https://api.instagram.com/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
                 container.logger().info("link: "+link);
-                HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
+                //HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
+                HttpClient client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
+
+
                 //String proxyHost = System.getProperty("http.proxyHost", "none");
                 //Integer proxyPort = Integer.valueOf(System.getProperty("http.proxyPort", "80"));
 
@@ -73,7 +74,7 @@ public class APIWorker extends Verticle {
                                     JsonArray array = new JsonArray();
                                     for (int i = 0; i < list.size(); i++) {
                                         JsonObject instaPhoto = list.get(i);
-                                        container.logger().info(instaPhoto.toString());
+
                                         JsonObject photo = new JsonObject();
                                         // la photo vient d'instagram
                                         photo.putString("source", "instagram");
@@ -116,10 +117,14 @@ public class APIWorker extends Verticle {
                                     response.putValue("code", 400);
                                 }
                                 message.reply(response);
+                                message.reply(response);
                             }
                         });
                     }
                 });
+
+                request.putHeader("Proxy-Authorization", Credentials.proxy_auth);
+
                 request.end();
                 //client.close();
             }
