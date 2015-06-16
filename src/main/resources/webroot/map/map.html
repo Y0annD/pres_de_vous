@@ -17,8 +17,6 @@
 			console.log("Votre navigateur ne prend pas en compte la géolocalisation HTML5.");
 
 		function successCallback(position){
-			//console.log("Latitude : " + position.coords.latitude + ", longitude : " + position.coords.longitude);
-			//map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 			document.querySelector('pic-map').lat = position.coords.latitude;
 			document.querySelector('pic-map').lng = position.coords.longitude;
 		};

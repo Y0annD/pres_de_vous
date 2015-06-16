@@ -1,7 +1,4 @@
-
 <link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="bower_components/iron-icons/iron-icons.html">
 
 <dom-module id="post-card">
     <style>
@@ -17,55 +14,30 @@
         .card-header {
             margin-bottom: 10px;
         }
-        /*polyfill-next-selector { content: '.card-header h2'; }*/
+        polyfill-next-selector { content: '.card-header h2'; }
         .card-header ::content h2 {
             margin: 0;
             font-size: 1.8rem;
             font-weight: 300;
         }
-        /*polyfill-next-selector { content: '.card-header .round'; }*/
+        polyfill-next-selector { content: '.card-header .round'; }
         .card-header ::content img .round{
             width: 70px;
             border-radius: 50%;
             margin: 10px;
         }
-        iron-icon {
-            position: absolute;
-            top: 3px;
-            right: 3px;
-            color: #636363;
-        }
-        :host([favorite]) iron-icon {
-            color: #da4336;
-        }
     </style>
     <template>
-        <div class="card-header" layout horizontal center>
+        <div class="card-header">
             <content select="img"></content>
             <content select="h2"></content>
         </div>
-
-        <iron-icon
-            id="favicon"
-            icon="icons:favorite"
-            on-tap="{{favoriteTapped}}">
-        </iron-icon>
 
         <content></content>
     </template>
     <script>
         Polymer({
-            publish: {
-                favorite: {
-                    value: false,
-                    reflectToAttribute: true
-                }
-            },
-
-            favoriteTapped: function(event, detail, sender) {
-                this.favorite = !this.favorite;
-                this.fire('favorite-tap');
-            }
+			
         });
     </script>
 </dom-module>
