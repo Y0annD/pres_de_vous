@@ -130,6 +130,6 @@ public class APIWorker extends Verticle {
             }
         };
 
-        eb.registerHandler("instagram.service", apiHandler);
+        eb.registerHandler("insta.service", apiHandler);
     }
 }

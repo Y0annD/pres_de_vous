@@ -84,12 +84,12 @@ public class APIWorker extends Verticle{
                                 // Ajout du code de retour
                                 response.putValue("code", 200);
                                 response.putArray("results", results);
-                                message.reply(response.toString());
+                                message.reply(response);
                                 return null;
                             }else{
                                 response.putValue("code", 400);
                                 response.putArray("results", new JsonArray());
-                                message.reply(response.toString());
+                                message.reply(response);
                                 return null;
                             }
                         },
@@ -97,7 +97,7 @@ public class APIWorker extends Verticle{
                             // On fail
                             response.putValue("code", 400);
                             response.putArray("results", new JsonArray());
-                            message.reply(response.toString());
+                            message.reply(response);
                             return null;
                         });
             }

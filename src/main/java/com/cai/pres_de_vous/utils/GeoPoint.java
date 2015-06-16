@@ -8,17 +8,29 @@ import org.vertx.java.core.json.JsonObject;
 public class GeoPoint {
     private float longitude;
     private float latitude;
+    private int perimeter;
     private String insta_token;
+
+    public GeoPoint(float lat, float lng, int perimeter){
+        longitude = lng;
+        latitude = lat;
+        this.perimeter = perimeter;
+    }
 
     public GeoPoint(float lat, float lng){
         longitude = lng;
         latitude = lat;
-        System.out.println("New GeoPoint");
+        perimeter = 0;
     }
 
     public GeoPoint(JsonObject obj){
         longitude = obj.getLong("longitude");
         latitude = obj.getLong("latitude");
+        if(obj.getInteger("perimetre")!=null){
+            perimeter = obj.getInteger("perimetre");
+        }else{
+            perimeter = 0;
+        }
         System.out.println("New GeoPoint from JSON");
     }
 
@@ -38,9 +50,9 @@ public class GeoPoint {
         this.longitude = longitude;
     }
 
-    public void setInstaToken(String token){insta_token = token;}
+    public void setPerimeter(int perimeter){this.perimeter = perimeter;}
 
-    public String getInstaToken(){return insta_token;}
+    public int getPerimeter(){return perimeter;}
 
     public boolean isValid(){
         if(latitude>=-90.0 && latitude<=90.0 && longitude>=-180.0 && longitude<=180.0)return true;
@@ -49,8 +61,9 @@ public class GeoPoint {
 
     public JsonObject toJSON(){
         JsonObject json = new JsonObject();
-        json.putValue("latitude",latitude+"");
-        json.putValue("longitude", longitude+"");
+        json.putValue("latitude",""+latitude);
+        json.putValue("longitude", ""+longitude);
+        json.putValue("perimetre", perimeter);
         json.putString("insta_token",insta_token);
         return json;
     }
