@@ -1,5 +1,6 @@
 package com.cai.pres_de_vous.google;
 
+import com.cai.pres_de_vous.Credentials;
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.When;
 import com.englishtown.promises.WhenFactory;
@@ -10,6 +11,7 @@ import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
+import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.JsonArray;
@@ -70,12 +72,12 @@ public class APIWorkerReference extends Verticle {
                 String lng = message.body().getString("longitude");
                 Integer perim = message.body().getInteger("perimetre");
 
-                String link = "/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius="+perim+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+                String link = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius="+perim+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
                 System.out.println("link: "+link);
 
-                client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
+                client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
 
-                client.getNow(link, new Handler<HttpClientResponse>() {
+                HttpClientRequest request = client.get(link, new Handler<HttpClientResponse>() {
 
                     Buffer body = new Buffer(0);
 
@@ -94,7 +96,7 @@ public class APIWorkerReference extends Verticle {
                                 JsonArray refPhotos = listReferencesPhotos(obj);
 
                                 // Cas où on ne trouve pas de photos dans notre périmètre : On élargie la recherche
-                                if(refPhotos.size() == 0 && elargCounter < 2){
+                                if (refPhotos.size() == 0 && elargCounter < 2) {
                                     elargCounter++;
                                     JsonObject point = new JsonObject();
                                     point.putString("latitude", lat);
@@ -120,10 +122,10 @@ public class APIWorkerReference extends Verticle {
                                                 message.reply();
                                                 return null;
                                             });
-                                }else{
+                                } else {
                                     elargCounter = 0;
                                     java.util.List<Promise<Message<JsonObject>>> promises = new ArrayList<>();
-                                    for(int i=0; i<refPhotos.size(); i++){ //On récupère ici les references des photos une par une
+                                    for (int i = 0; i < refPhotos.size(); i++) { //On récupère ici les references des photos une par une
                                         JsonObject ref_photo = refPhotos.get(i);
                                         ref_photo.putNumber("number", counter);
                                         //container.logger().info("Ici on envoie la référence suivante : "+ref_photo.toString());
@@ -159,6 +161,9 @@ public class APIWorkerReference extends Verticle {
                         });
                     }
                 });
+
+                request.putHeader("Proxy-Authorization", Credentials.proxy_auth);
+                request.end();
             }
         };
 

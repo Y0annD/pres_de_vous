@@ -1,5 +1,6 @@
 package com.cai.pres_de_vous.twitter;
 
+import com.cai.pres_de_vous.Credentials;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.TwitterApi;
 import org.scribe.model.*;
@@ -29,8 +30,8 @@ public class APIWorker extends Verticle {
 
         EventBus eb = vertx.eventBus();
 
-        final String authUser = "username";
-        final String authPassword = "password";
+        final String authUser = Credentials.username;
+        final String authPassword = Credentials.password;
         Authenticator.setDefault(
                 new Authenticator() {
                     public PasswordAuthentication getPasswordAuthentication() {
@@ -39,12 +40,12 @@ public class APIWorker extends Verticle {
                     }
                 }
         );
-        System.setProperty("http.proxyHost","proxy.enib.fr");
-        System.setProperty("http.proxyPort","3128");
+        System.setProperty("http.proxyHost", Credentials.proxyHost);
+        System.setProperty("http.proxyPort",""+Credentials.proxyPort);
         System.setProperty("http.proxyUser", authUser);
         System.setProperty("http.proxyPassword", authPassword);
-        System.setProperty("https.proxyHost","proxy.enib.fr");
-        System.setProperty("https.proxyPort","3128");
+        System.setProperty("https.proxyHost",Credentials.proxyHost);
+        System.setProperty("https.proxyPort",""+Credentials.proxyPort);
         System.setProperty("https.proxyUser", authUser);
         System.setProperty("https.proxyPassword", authPassword);
 
@@ -73,9 +74,7 @@ public class APIWorker extends Verticle {
                 service.signRequest(accessToken, request);
 
                 Response response = request.send();
-                System.out.println("Got it! Lets see what we found...");
-                System.out.println();
-                System.out.println(response.getBody());
+
 
                 /**
                  * Traitement de la réponse
@@ -109,7 +108,6 @@ public class APIWorker extends Verticle {
 
                     }
                     resp.putArray("results",respArray);
-                    container.logger().info("response: "+resp.toString());
                 }else{
                     resp.putValue("code", 400);
                 }

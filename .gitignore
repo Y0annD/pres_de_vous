@@ -21,3 +21,4 @@ test-tmp
 *.iws
 mods
 vertx_classpath.txt
+Credentials.java
