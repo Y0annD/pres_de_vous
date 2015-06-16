@@ -38,9 +38,12 @@ public class APIWorker extends Verticle {
 
                 //User user = new User(new JsonObject(map.get(cookie)));
                 //1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626
-                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
+                String link = "https://api.instagram.com/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
                 container.logger().info("link: "+link);
-                HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
+                //HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
+                HttpClient client = vertx.createHttpClient().setPort(3128).setHost("proxy.enib.fr");
+
+
                 //String proxyHost = System.getProperty("http.proxyHost", "none");
                 //Integer proxyPort = Integer.valueOf(System.getProperty("http.proxyPort", "80"));
 
@@ -120,6 +123,7 @@ public class APIWorker extends Verticle {
                         });
                     }
                 });
+                request.putHeader("Proxy-Authorization","proxy-auth");
                 request.end();
                 //client.close();
             }
