@@ -16,6 +16,8 @@ import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.platform.Verticle;
+
+import java.security.cert.CertificateEncodingException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -72,10 +74,16 @@ public class APIWorkerReference extends Verticle {
                 String lng = message.body().getString("longitude");
                 Integer perim = message.body().getInteger("perimetre");
 
-                String link = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius="+perim+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+                String link = "/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius="+perim+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
                 System.out.println("link: "+link);
 
-                client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
+                if(Credentials.proxy_enable){
+                    link = "https://maps.googleapis.com"+link;
+                    client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
+                }else{
+                    client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
+                }
+
 
                 HttpClientRequest request = client.get(link, new Handler<HttpClientResponse>() {
 
@@ -92,6 +100,7 @@ public class APIWorkerReference extends Verticle {
                         response.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
+                                //container.logger().info(body.toString());
                                 JsonObject obj = new JsonObject(body.toString());
                                 JsonArray refPhotos = listReferencesPhotos(obj);
 

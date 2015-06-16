@@ -30,25 +30,26 @@ public class APIWorker extends Verticle {
 
         EventBus eb = vertx.eventBus();
 
-        final String authUser = Credentials.username;
-        final String authPassword = Credentials.password;
-        Authenticator.setDefault(
-                new Authenticator() {
-                    public PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(
-                                authUser, authPassword.toCharArray());
+        if(Credentials.proxy_enable) {
+            final String authUser = Credentials.username;
+            final String authPassword = Credentials.password;
+            Authenticator.setDefault(
+                    new Authenticator() {
+                        public PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(
+                                    authUser, authPassword.toCharArray());
+                        }
                     }
-                }
-        );
-        System.setProperty("http.proxyHost", Credentials.proxyHost);
-        System.setProperty("http.proxyPort",""+Credentials.proxyPort);
-        System.setProperty("http.proxyUser", authUser);
-        System.setProperty("http.proxyPassword", authPassword);
-        System.setProperty("https.proxyHost",Credentials.proxyHost);
-        System.setProperty("https.proxyPort",""+Credentials.proxyPort);
-        System.setProperty("https.proxyUser", authUser);
-        System.setProperty("https.proxyPassword", authPassword);
-
+            );
+            System.setProperty("http.proxyHost", Credentials.proxyHost);
+            System.setProperty("http.proxyPort", "" + Credentials.proxyPort);
+            System.setProperty("http.proxyUser", authUser);
+            System.setProperty("http.proxyPassword", authPassword);
+            System.setProperty("https.proxyHost", Credentials.proxyHost);
+            System.setProperty("https.proxyPort", "" + Credentials.proxyPort);
+            System.setProperty("https.proxyUser", authUser);
+            System.setProperty("https.proxyPassword", authPassword);
+        }
         Handler<Message<JsonObject>> twitterHandler = new Handler<Message<JsonObject>>() {
             @Override
             public void handle(Message<JsonObject> event) {
@@ -60,7 +61,7 @@ public class APIWorker extends Verticle {
                         .build();
 
 
-                String PROTECTED_RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json?q=%20&geocode="+event.body().getValue("latitude")+"%2C"+event.body().getValue("longitude")+"%2C10km";
+                String PROTECTED_RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json?q=%20&geocode="+event.body().getValue("latitude")+"%2C"+event.body().getValue("longitude")+"%2C5km";
 
                 Verifier verifier = new Verifier("jpU84YotxmD97YUSzeB6hBaOUlwed24bCj8c46EscOD79");
                 Token requestToken = new Token("qT-oegAAAAAAgI3nAAABTfILbY0","5hWFfDdB0TJZAWyLXXBtfrRditimEQf2");

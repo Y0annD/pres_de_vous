@@ -35,22 +35,18 @@ public class APIWorker extends Verticle {
 
                 //String cookie = message.body().getString("cookie");
 
-                //User user = new User(new JsonObject(map.get(cookie)));
-                String link = "https://api.instagram.com/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
+                String link = "/v1/media/search?lat="+message.body().getString("latitude")+"&lng="+message.body().getString("longitude")+"&access_token=1908124175.812f30f.2bf9fef724754d2d840dfe3fea402626";
                 container.logger().info("link: "+link);
-                //HttpClient client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
-                HttpClient client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
+                HttpClient client = vertx.createHttpClient();
 
 
-                //String proxyHost = System.getProperty("http.proxyHost", "none");
-                //Integer proxyPort = Integer.valueOf(System.getProperty("http.proxyPort", "80"));
-
-                /*if(!"none".equalsIgnoreCase(proxyHost)){
-                    container.logger().info("set proxy to "+proxyHost+":"+proxyPort);
-                    client.setHost(proxyHost);
-                    client.setPort(proxyPort);
+                if(Credentials.proxy_enable){
+                    client.setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
                     link = "https://api.instagram.com"+link;
-                }*/
+                }else{
+                    client.setSSL(true).setTrustAll(true).setPort(443).setHost("api.instagram.com");
+                }
+
                 HttpClientRequest request = client.get(link, new Handler<HttpClientResponse>() {
 
                     Buffer body = new Buffer(0);
@@ -123,10 +119,11 @@ public class APIWorker extends Verticle {
                     }
                 });
 
-                request.putHeader("Proxy-Authorization", Credentials.proxy_auth);
+                if(Credentials.proxy_enable)
+                    request.putHeader("Proxy-Authorization", Credentials.proxy_auth);
 
+                // send request
                 request.end();
-                //client.close();
             }
         };
 

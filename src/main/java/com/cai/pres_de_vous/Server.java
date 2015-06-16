@@ -36,7 +36,50 @@ public class Server extends Verticle {
         RouteMatcher routeMatcher = new RouteMatcher();
 
 
+        routeMatcher.get("/insta/:lat/:lng", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(final HttpServerRequest clientRequest) {
 
+                String cookie = clientRequest.headers().get("Cookie");
+                String lat = clientRequest.params().get("lat");
+                String lng = clientRequest.params().get("lng");
+                JsonObject usr = new JsonObject();
+                container.logger().info("cookie: "+cookie);
+                //if(cookie!=null)
+                //    usr.putString("token",cookie.substring(cookie.indexOf("=")+1));
+                usr.putString("action","FIND");
+                final GeoPoint point = new GeoPoint(Float.parseFloat(lat),Float.parseFloat(lng));
+                if(point.isValid()) {
+                    //eb.send("DBHelper-auth", usr, new Handler<Message<JsonObject>>() {
+                      // @Override
+
+                        //public void handle(Message<JsonObject> event) {
+                         //   container.logger().info(event.body());
+                         //   if(event.body().getInteger("number")==1){
+                         //       point.setInstaToken(((JsonObject)event.body().getArray("results").get(0)).getString("insta_key"));
+                                eb.send("insta.service", point.toJSON(), new Handler<Message<JsonObject>>() {
+                                    @Override
+                                    public void handle(Message<JsonObject> eventBusResponse) {
+                                        //JsonObject ob = new JsonObject(eventBusResponse.body().toString());
+                                        //clientRequest.response().end(ob.getArray("data").toString());
+                                        clientRequest.response().end(eventBusResponse.body().encodePrettily());
+                                    }
+                                });
+                          //  }else{
+                           //     clientRequest.response().end("Tu n'est pas autorisé jeune padawan");
+                            //}
+                        //}
+                    //});
+
+
+
+                }else{
+                    clientRequest.response().end("Invalid position");
+                }
+
+            }
+        });
+/*
         routeMatcher.get("/:service/:lat/:lng", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest event) {
@@ -47,24 +90,27 @@ public class Server extends Verticle {
                 String service = event.params().get("service");
                 if (service.equals("google") || service.equals("twitter") || service.equals("insta")) {
 
-                if(point.isValid()) {
-                    eb.send(service+".service", point.toJSON(), new Handler<Message<JsonObject>>() {
-                        @Override
-                        public void handle(Message<JsonObject> eventBusResponse) {
 
-                            event.response().end(eventBusResponse.body().encodePrettily());
+                    event.response().end("service: " + service);
+                /*
+                if(point.isValid()) {
+                    eb.send("google.service", point.toJSON(), new Handler<Message<String>>() {
+                        @Override
+                        public void handle(Message<String> eventBusResponse) {
+
+                            event.response().end(eventBusResponse.body());
                         }
                     });
                 }else{
-                    event.response().end("{\"code\":400,\"text\":\"Invalid position\"}");
+                    event.response().end("Invalid position");
                 }
                 }else{
                     event.response().end("{\"code\":400,\"text\":\"Ce service n'existe pas\"}");
                 }
             }
         });
-
-        /*routeMatcher.get("/google/:lat/:lng", new Handler<HttpServerRequest>() {
+*/
+        routeMatcher.get("/google/:lat/:lng", new Handler<HttpServerRequest>() {
             @Override
             public void handle(final HttpServerRequest event) {
 
@@ -75,11 +121,11 @@ public class Server extends Verticle {
                 jsPoint.putNumber("perimetre", 500);
                 //container.logger().info(jsPoint.toString());
                 if(point.isValid()) {
-                    eb.send("google.service", jsPoint, new Handler<Message<String>>() {
+                    eb.send("google.service", jsPoint, new Handler<Message<JsonObject>>() {
                         @Override
-                        public void handle(Message<String> eventBusResponse) {
+                        public void handle(Message<JsonObject> eventBusResponse) {
 
-                            event.response().end(eventBusResponse.body());
+                            event.response().end(eventBusResponse.body().encodePrettily());
                         }
                     });
                 }else{
@@ -87,7 +133,7 @@ public class Server extends Verticle {
                 }
 
             }
-        });*/
+        });
 
 
         /**

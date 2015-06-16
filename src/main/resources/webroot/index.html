@@ -22,7 +22,7 @@
           href="bower_components/paper-input/paper-input.html">
     <link rel="import"
           href="bower_components/paper-elements/paper-elements.html">
-    <link rel=import"
+    <link rel="import"
           href="bower_components/paper-button/paper-button.html">
     <style>
         html,body {
@@ -40,39 +40,17 @@
             background: #03a9f4;
             color: white;
         }
-        #tabs {
-            width: 100%;
-            margin: 0;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            text-transform: uppercase;
-        }
+
         .container {
             width: 80%;
             margin: 50px auto;
-        }
-        @media (min-width: 481px) {
-            #tabs {
-                width: 200px;
-            }
-            .container {
-                width: 400px;
-            }
-        }
-
-        #submit {
-            background: green;
-            color: yellow;
         }
     </style>
 
 </head>
 
-<body unresolved>
+<body>
 
-<core-header-panel>
 
     <core-toolbar>
 
@@ -93,15 +71,9 @@
         </form>
     </div>
 
-</core-header-panel>
+
 
 <script>
-    var tabs = document.querySelector('paper-tabs');
-    var list = document.querySelector('post-list');
-
-    /*tabs.addEventListener('core-select', function() {
-        list.show = tabs.selected;
-    });*/
 
     var form = document.getElementById("sign_up");
     document.getElementById("send").addEventListener("click", function () {

@@ -50,11 +50,17 @@ public class APIWorkerPhoto extends Verticle{
 
                 ConcurrentMap<Integer, String> map = vertx.sharedData().getMap("worker.photo");
 
-                String link = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+message.body().getString("photo_reference")+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+                String link = "/maps/api/place/photo?maxwidth=400&photoreference="+message.body().getString("photo_reference")+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
                 int number = message.body().getInteger("number");
 
                 //System.out.println("link: "+link);
-                client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
+                if(Credentials.proxy_enable){
+                    link = "https://maps.googleapis.com"+link;
+                    client = vertx.createHttpClient().setPort(Credentials.proxyPort).setHost(Credentials.proxyHost);
+                }else{
+                    client = vertx.createHttpClient().setPort(443).setHost("maps.googleapis.com").setSSL(true).setTrustAll(true);
+                }
+
 
                 HttpClientRequest request = client.get(link, new Handler<HttpClientResponse>() {
 
@@ -79,7 +85,8 @@ public class APIWorkerPhoto extends Verticle{
                         });
                     }
                 });
-                request.putHeader("Proxy-Authorization",Credentials.proxy_auth);
+                if(Credentials.proxy_enable)
+                    request.putHeader("Proxy-Authorization",Credentials.proxy_auth);
                 request.end();
             }
         };
