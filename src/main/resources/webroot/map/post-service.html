@@ -1,4 +1,3 @@
-
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
 
@@ -25,13 +24,17 @@
 					type: String,
 					value: ''
 				},
+				
                 posts: {
                     type: Array,
                     value: [],
                     notify: true
                 },
+				
 				prov: String,
+				
                 lat: Number,
+				
                 lng: Number
             },
 
@@ -42,22 +45,7 @@
             },
 
             postsLoaded: function(request) {
-                // Make a copy of the loaded data
                 this.posts = request.detail.response;
-            },
-
-            /**
-             * Update the service with the current favorite value.
-             * (Two-way data binding updates the favorite value
-             * stored locally.) If this was a real service, this
-             * method would do something useful.
-             *
-             * @method setFavorite
-             * @param uid {Number} Unique ID for post.
-             * @param isFavorite {Boolean} True if the user marked this post as a favorite.
-             */
-            setFavorite: function(uid, isFavorite) {
-                // no service backend, just log the change
             }
         });
     </script>

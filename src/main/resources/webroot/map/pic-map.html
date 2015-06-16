@@ -4,7 +4,7 @@
 
 <link rel="import" href="post-service.html">
 <link rel="import" href="post-card.html">
-<!-- <link rel="import" href="search-box.html"> -->
+<link rel="import" href="search-box.html">
 
 <dom-module id="pic-map">
     <style>
@@ -18,6 +18,8 @@
 		}
     </style>
     <template>
+		<!-- POUR SIMU OFFLINE (fake API) : Ajouter fake-api="path/to/static-data.json" dans le tag post-service désiré (le format du JSON doit être compatible). -->
+		
         <!-- <post-service prov="google" lat="{{lat}}" lng="{{lng}}" posts="{{posts.google}}"></post-service> -->
         <!-- <post-service prov="twitter" lat="{{lat}}" lng="{{lng}}" posts="{{posts.twitter}}"></post-service> -->
         <post-service fake-api="fake-api.json" prov="insta" lat="{{lat}}" lng="{{lng}}" posts="{{posts.insta}}"></post-service>
@@ -100,12 +102,12 @@
 		
 		<button id="controlsToggle" on-click="togglePlace">Go ENIBar</button>
 
-        <div id="search">
+        <!-- <div id="search">
             <iron-icon icon="icons:search"></iron-icon>
             <input placeholder="Emplacement">
-        </div>
+        </div> -->
 		
-		<!-- <search-box location="{{location}}"></search-box> -->
+		<search-box language="fr" lat="{{lat}}" lng="{{lng}}"></search-box>
     </template>
     <script>
         Polymer({
@@ -143,42 +145,6 @@
 				this.lat = 48.3612161;
 				this.lng = -4.5661822;
 			},
-			
-			/*ready: function() {
-				var map = document.querySelector('google-map');
-				
-				// Création champ de recherche
-				var input = document.getElementById('search');
-				var autocomplete = new google.maps.places.Autocomplete(input);
-				var place;
-
-				// Ancrage top-left
-				//map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-				// Listener : Enter = premier résultat
-				google.maps.event.addDomListener(input, 'keydown', function(key) {
-					if (key.keyCode === 13 && !key.triggered) {
-						google.maps.event.trigger(this, 'keydown', {keyCode: 40});
-						google.maps.event.trigger(this, 'keydown', {keyCode: 13, triggered: true});
-					}
-				});
-
-				// Listener : clic sur un résultat
-				google.maps.event.addListener(autocomplete, 'place_changed', function() {
-					place = autocomplete.getPlace();
-					
-					this.lat = place.geometry.location.lat();
-					this.lng = place.geometry.location.lng();
-					
-					map.clear();
-					map.resize();
-				});
-
-				// Listener : clic champ
-				input.addEventListener('click', function() {
-					input.value = '';
-				});
-			}*/
         });
     </script>
 </dom-module>
