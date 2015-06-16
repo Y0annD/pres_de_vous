@@ -19,6 +19,8 @@
 		function successCallback(position){
 			document.querySelector('pic-map').lat = position.coords.latitude;
 			document.querySelector('pic-map').lng = position.coords.longitude;
+			document.querySelector('google-map').clear();
+			document.querySelector('google-map').resize();
 		};
 
 		function errorCallback(error){

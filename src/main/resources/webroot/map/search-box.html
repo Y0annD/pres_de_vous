@@ -78,6 +78,7 @@
 					var place = this.autocomplete.getPlace();
 					this.lat = place.geometry.location.A;
 					this.lng = place.geometry.location.F;
+					//this.fire('search');
 				}.bind(this));
 			},
 			
@@ -86,6 +87,9 @@
 					this.fire('keydown', {keyCode: 40});
 					this.fire('keydown', {keyCode: 13, triggered: true});
 				}*/
+				if (key.keyCode === 13 && !key.triggered) {
+					this.fire('search');
+				}
 			},
 			
 			clickHandler: function() {

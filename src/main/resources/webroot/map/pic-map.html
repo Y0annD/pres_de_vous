@@ -1,4 +1,3 @@
-
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/google-map/google-map.html">
 
@@ -17,10 +16,10 @@
 		<!-- POUR SIMU OFFLINE (fake API) : Ajouter fake-api="path/to/static-data.json" dans le tag post-service désiré (le format du JSON doit être compatible). -->
 		
         <!-- <post-service prov="google" lat="{{lat}}" lng="{{lng}}" posts="{{posts.google}}"></post-service> -->
-        <post-service fake-api="fake-twitter.json" prov="twitter" lat="{{lat}}" lng="{{lng}}" posts="{{posts.twitter}}"></post-service>
-        <post-service fake-api="fake-insta.json" prov="insta" lat="{{lat}}" lng="{{lng}}" posts="{{posts.insta}}"></post-service>
+        <!-- <post-service fake-api="fake-twit.json" prov="twitter" lat="{{lat}}" lng="{{lng}}" posts="{{posts.twitter}}"></post-service> -->
+        <post-service prov="insta" lat="{{lat}}" lng="{{lng}}" posts="{{posts.insta}}"></post-service>
 		
-        <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" zoom="15" language="fr">
+        <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" draggable="false" zoom="15" max-zoom="15" min-zoom="15" language="fr">
 			
             <template is="dom-repeat" items="{{posts.google.results}}">
                 <google-map-marker
@@ -80,7 +79,7 @@
 			
         </google-map>
 		
-		<search-box language="fr" lat="{{lat}}" lng="{{lng}}"></search-box>
+		<search-box language="fr" lat="{{lat}}" lng="{{lng}}" on-search="searchHandler"></search-box>
     </template>
     <script>
         Polymer({
@@ -110,6 +109,11 @@
 			],
 			
 			geoChanged: function(lat, lng) {
+				//document.querySelector('google-map').clear();
+				//document.querySelector('google-map').resize();
+			},
+			
+			searchHandler: function() {
 				document.querySelector('google-map').clear();
 				document.querySelector('google-map').resize();
 			}
