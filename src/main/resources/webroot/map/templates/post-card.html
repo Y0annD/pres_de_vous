@@ -1,0 +1,43 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="post-card">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            background-color: white;
+            padding: 20px;
+            width: 100%;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        .card-header {
+            margin-bottom: 10px;
+        }
+        polyfill-next-selector { content: '.card-header h2'; }
+        .card-header ::content h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+        polyfill-next-selector { content: '.card-header .round'; }
+        .card-header ::content img .round{
+            width: 70px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+    </style>
+    <template>
+        <div class="card-header">
+            <content select="img"></content>
+            <content select="h2"></content>
+        </div>
+
+        <content></content>
+    </template>
+    <script>
+        Polymer({
+			is: 'post-card'
+        });
+    </script>
+</dom-module>
