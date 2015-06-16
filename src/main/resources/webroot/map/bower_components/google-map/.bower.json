@@ -1,6 +1,6 @@
 {
   "name": "google-map",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "Google Maps web components",
   "homepage": "https://googlewebcomponents.github.io/google-map",
   "main": "google-map.html",
@@ -25,20 +25,20 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0",
-    "google-apis": "GoogleWebComponents/google-apis#^1.0.0",
-    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.0"
+    "google-apis": "GoogleWebComponents/google-apis#^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "*",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.2"
   },
-  "_release": "1.0.2",
+  "_release": "1.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.2",
-    "commit": "ceb706756206d2cd14d956750dcfb247d4ad0011"
+    "tag": "1.0.0",
+    "commit": "4dbe068ff16cfa93e5197b96ec7e247dcefc3e5a"
   },
-  "_source": "git://github.com/PolymerLabs/google-map.git",
-  "_target": "*",
-  "_originalSource": "PolymerLabs/google-map"
+  "_source": "git://github.com/GoogleWebComponents/google-map.git",
+  "_target": "1.0.0",
+  "_originalSource": "GoogleWebComponents/google-map",
+  "_direct": true
 }

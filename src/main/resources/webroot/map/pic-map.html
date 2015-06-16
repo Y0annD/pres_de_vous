@@ -1,5 +1,6 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/google-map/google-map.html">
+<link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="post-service.html">
 <link rel="import" href="post-card.html">
@@ -13,11 +14,22 @@
         }
     </style>
     <template>
+		<!-- <paper-dialog>
+			<h2>Header</h2>
+			<paper-dialog-scrollable>
+				Lorem ipsum...
+			</paper-dialog-scrollable>
+			<div class="buttons">
+				<paper-button dialog-dismiss>Cancel</paper-button>
+				<paper-button dialog-confirm>Accept</paper-button>
+			</div>
+		</paper-dialog> -->
+
 		<!-- POUR SIMU OFFLINE (fake API) : Ajouter fake-api="path/to/static-data.json" dans le tag post-service désiré (le format du JSON doit être compatible). -->
 		
         <!-- <post-service prov="google" lat="{{lat}}" lng="{{lng}}" posts="{{posts.google}}"></post-service> -->
-        <!-- <post-service fake-api="fake-twit.json" prov="twitter" lat="{{lat}}" lng="{{lng}}" posts="{{posts.twitter}}"></post-service> -->
-        <post-service prov="insta" lat="{{lat}}" lng="{{lng}}" posts="{{posts.insta}}"></post-service>
+        <post-service fake-api="fake-twit.json" prov="twitter" lat="{{lat}}" lng="{{lng}}" posts="{{posts.twitter}}"></post-service>
+        <post-service fake-api="fake-insta.json" prov="insta" lat="{{lat}}" lng="{{lng}}" posts="{{posts.insta}}"></post-service>
 		
         <google-map disable-default-ui latitude="{{lat}}" longitude="{{lng}}" draggable="false" zoom="15" max-zoom="15" min-zoom="15" language="fr">
 			
@@ -27,6 +39,8 @@
 					latitude="{{item.location.latitude}}"
 					longitude="{{item.location.longitude}}"
 					title="{{item.author.username}}"
+					click-events="true"
+					on-google-map-marker-click="markerHandler"
 					language="fr">
 					
                     <post-card>
@@ -46,6 +60,8 @@
 					latitude="{{item.location.latitude}}"
 					longitude="{{item.location.longitude}}"
 					title="{{item.text}}"
+					click-events="true"
+					on-google-map-marker-click="markerHandler"
 					language="fr">
 						
 					<post-card>
@@ -64,6 +80,8 @@
 					latitude="{{item.location.latitude}}"
 					longitude="{{item.location.longitude}}"
 					title="{{item.location.name}}"
+					click-events="true"
+					on-google-map-marker-click="markerHandler"
 					language="fr">
 					
                     <post-card>
@@ -107,6 +125,12 @@
 			observers: [
 				'geoChanged(lat, lng)'
 			],
+			
+			markerHandler: function(e, detail, sender) {
+				console.log(e);
+				console.log(detail);
+				console.log(sender);
+			},
 			
 			geoChanged: function(lat, lng) {
 				//document.querySelector('google-map').clear();

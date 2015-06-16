@@ -16,8 +16,11 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer",
-    "iron-elements": "PolymerElements/iron-elements",
-    "google-map": "PolymerLabs/google-map"
+    "google-map": "GoogleWebComponents/google-map#1.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#1.0.0",
+    "iron-icons": "PolymerElements/iron-icons#1.0.0",
+    "paper-dialog": "PolymerElements/paper-dialog#1.0.0",
+    "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#1.0.0"
   }
 }
