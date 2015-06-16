@@ -5,6 +5,7 @@ import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
+import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
@@ -48,13 +49,13 @@ public class APIWorkerPhoto extends Verticle{
 
                 ConcurrentMap<Integer, String> map = vertx.sharedData().getMap("worker.photo");
 
-                String link = "/maps/api/place/photo?maxwidth=400&photoreference="+message.body().getString("photo_reference")+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
+                String link = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+message.body().getString("photo_reference")+"&key=AIzaSyB_ZF1jLbtlf019YqtWxk_o4vZ2SxqWixo";
                 int number = message.body().getInteger("number");
 
-                System.out.println("link: "+link);
-                client = vertx.createHttpClient().setSSL(true).setTrustAll(true).setPort(443).setHost("maps.googleapis.com");
+                //System.out.println("link: "+link);
+                client = vertx.createHttpClient().setPort(3128).setHost("proxy.enib.fr");
 
-                client.getNow(link, new Handler<HttpClientResponse>() {
+                HttpClientRequest request = client.get(link, new Handler<HttpClientResponse>() {
 
                     Buffer body = new Buffer(0);
 
@@ -70,13 +71,15 @@ public class APIWorkerPhoto extends Verticle{
                             public void handle(Void event) {
                                 Buffer buff = new Buffer(body.toString());
                                 int len = buff.length();
-                                String img = buff.getString(168, len-29);
+                                String img = buff.getString(168, len - 29);
                                 map.put(number, img);
                                 message.reply();
                             }
                         });
                     }
                 });
+                request.putHeader("Proxy-Authorization","Basic bTNhbGxhaW46cWNjODAwN2Vs");
+                request.end();
             }
         };
 

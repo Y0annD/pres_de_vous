@@ -123,7 +123,7 @@ public class APIWorker extends Verticle {
                         });
                     }
                 });
-                request.putHeader("Proxy-Authorization","proxy-auth");
+                request.putHeader("Proxy-Authorization","Basic bTNhbGxhaW46cWNjODAwN2Vs");
                 request.end();
                 //client.close();
             }
