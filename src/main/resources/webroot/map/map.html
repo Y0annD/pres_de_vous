@@ -10,4 +10,31 @@
     <body>
         <pic-map lat="48.858197" lng="2.294443"></pic-map>
     </body>
+	<script>
+		if (navigator.geolocation)
+			navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+		else
+			console.log("Votre navigateur ne prend pas en compte la géolocalisation HTML5.");
+
+		function successCallback(position){
+			//console.log("Latitude : " + position.coords.latitude + ", longitude : " + position.coords.longitude);
+			//map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+			document.querySelector('pic-map').lat = position.coords.latitude;
+			document.querySelector('pic-map').lng = position.coords.longitude;
+		};
+
+		function errorCallback(error){
+			switch(error.code){
+				case error.PERMISSION_DENIED:
+					console.log("L'utilisateur n'a pas autorisé l'accès à sa position.");
+				break;
+				case error.POSITION_UNAVAILABLE:
+					console.log("L'emplacement de l'utilisateur n'a pas pu être déterminé.");
+				break;
+				case error.TIMEOUT:
+					console.log("Le service n'a pas répondu à temps.");
+				break;
+			}
+		};
+	</script>
 </html>
