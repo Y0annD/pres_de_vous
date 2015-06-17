@@ -70,8 +70,6 @@ public class APIWorker extends Verticle {
 
                 OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
 
-                //request.addHeader("Proxy-Authorisation","Basic eTFkaXF1ZWw6Rm56KjUwNDZ0Zj8=");
-
                 service.signRequest(accessToken, request);
 
                 Response response = request.send();

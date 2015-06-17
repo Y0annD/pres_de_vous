@@ -14,9 +14,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
- * Created by Yoann Diquélou on 02/06/15.
+ * Created by math on 02/06/15.
+ * package fr.dworkin.sdz.javadoc;
  * Use Mongo DB to singn-in sign-up and check other things in database
+ *
+ * @author Yoann Diquélou
+ * @version 1.0
  */
+
 public class DBHelper extends Verticle {
     EventBus eb;
     private static MessageDigest md;

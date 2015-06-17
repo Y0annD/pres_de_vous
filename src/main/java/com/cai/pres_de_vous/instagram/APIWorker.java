@@ -14,9 +14,15 @@ import org.vertx.java.platform.Verticle;
 
 
 /**
- * Created by crocus on 30/05/15.
+ * Created by Yoann Diquélou on 07/06/15.
+ * package fr.dworkin.sdz.javadoc;
+ * Worker permettant de récupérer la liste des photos instagram en fonction des coordonnées qui lui sont passés.
+ *
+ * @author Yoann Diquélou
+ * @version 1.0
  */
 public class APIWorker extends Verticle {
+
 
 
     @Override
