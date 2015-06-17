@@ -1,0 +1,184 @@
+{
+  "code" : 200,
+  "results" : [ {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.8296026,
+      "longitude" : 2.3749739
+    },
+    "link" : "https://twitter.com/AliceRegal16/status/610659362319802368",
+    "text" : "@_Loucyy_ Merci Lucy ! ❤❤",
+    "author" : {
+      "username" : "AliceRegal16",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/550777666685919233/owPOYajR_normal.jpeg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.84713883,
+      "longitude" : 2.30369966
+    },
+    "link" : "https://twitter.com/InesJasmine_M/status/610659339792216064",
+    "text" : "Askip le bac c'est demain.",
+    "author" : {
+      "username" : "InesJasmine_M",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/610048448411344896/pSvCSxMT_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.8296026,
+      "longitude" : 2.3749739
+    },
+    "link" : "https://twitter.com/AliceRegal16/status/610659267012640768",
+    "text" : "@valemartinez00 YAS ILY",
+    "author" : {
+      "username" : "AliceRegal16",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/550777666685919233/owPOYajR_normal.jpeg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.8296026,
+      "longitude" : 2.3749739
+    },
+    "link" : "https://twitter.com/AliceRegal16/status/610659218346090496",
+    "text" : "@CamilleMulan THANKS !",
+    "author" : {
+      "username" : "AliceRegal16",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/550777666685919233/owPOYajR_normal.jpeg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.8294235,
+      "longitude" : 2.3747512
+    },
+    "link" : "https://twitter.com/AliceRegal16/status/610659165032349696",
+    "text" : "@EvilMarie1 @V31Lisa Merciiiiii !!!!! Mwah ❤",
+    "author" : {
+      "username" : "AliceRegal16",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/550777666685919233/owPOYajR_normal.jpeg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.878356,
+      "longitude" : 2.369567
+    },
+    "link" : "https://twitter.com/MissAleOrange/status/610607130777882624",
+    "text" : "Blog Paseo por París, museo del Lovrue @FashionGeeksta @Solcitomkup #paris #vacaciones #fb #vblogger  http://t.co/OjMWGs3DGJ",
+    "author" : {
+      "username" : "MissAleOrange",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/552650284292268033/KpaoazhI_normal.jpeg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.886232,
+      "longitude" : 2.3580929
+    },
+    "link" : "https://twitter.com/Nizard_Bdl/status/610658265748369408",
+    "text" : "6:00",
+    "author" : {
+      "username" : "Nizard_Bdl",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/581953994098143232/vmPGSAx1_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.835237,
+      "longitude" : 2.241131
+    },
+    "link" : "https://twitter.com/B2Onaparte/status/610658241819865089",
+    "text" : "\"J’ai toujours eu un manque �  combler\nJe dois tout �  une femme\"\n- #Booba - Ma Couleur",
+    "author" : {
+      "username" : "B2Onaparte",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/593051964671426560/OLkcZVpW_normal.png"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.886232,
+      "longitude" : 2.3580929
+    },
+    "link" : "https://twitter.com/Nizard_Bdl/status/610657223954550784",
+    "text" : "0555",
+    "author" : {
+      "username" : "Nizard_Bdl",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/581953994098143232/vmPGSAx1_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.83989946,
+      "longitude" : 2.30332172
+    },
+    "link" : "https://twitter.com/mayoilagan/status/610655248873619457",
+    "text" : "Simba simba din sa #NotreDame pag may time....  Hehehehe\n\nGrabe #Paris is beyond amazing!!… https://t.co/iLFq08mDUT",
+    "author" : {
+      "username" : "mayoilagan",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/2915279069/a55e27217a2b25ef116121ca35d7b539_normal.jpeg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.8567,
+      "longitude" : 2.351
+    },
+    "link" : "https://twitter.com/soltempore/status/610654612622843906",
+    "text" : "Good morning, Paris! :) #Sunrise 05:46, noon 13:51, sunset 21:57 CEST (UTC+2), June 16. Day length: 16h 10m.",
+    "author" : {
+      "username" : "soltempore",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/1166213500/soltempore_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.886232,
+      "longitude" : 2.3580929
+    },
+    "link" : "https://twitter.com/Nizard_Bdl/status/610650683168190464",
+    "text" : "@asivn_ Non tu te trompe cest un vigile d'Auchan",
+    "author" : {
+      "username" : "Nizard_Bdl",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/581953994098143232/vmPGSAx1_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.870248,
+      "longitude" : 2.316348
+    },
+    "link" : "https://twitter.com/FranceBidet/status/610654211961851904",
+    "text" : "Bac: ils ne l'ont pas eu http://t.co/yHAcoCWiFQ",
+    "author" : {
+      "username" : "FranceBidet",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/1866473677/5091552_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.89384076,
+      "longitude" : 2.29507547
+    },
+    "link" : "https://twitter.com/ahoeokdacc/status/592367797889536001",
+    "text" : "Ça c'est vrmt un truc de bz pcq personne n'y croit mais on rt qd même par précaution http://t.co/b0gKxDiJWq",
+    "author" : {
+      "username" : "ahoeokdacc",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/609968551584268288/17RBLFoJ_normal.jpg"
+    }
+  }, {
+    "source" : "twitter",
+    "location" : {
+      "latitude" : 48.886232,
+      "longitude" : 2.3580929
+    },
+    "link" : "https://twitter.com/Nizard_Bdl/status/610651229774069760",
+    "text" : "Quel bail il fait jour",
+    "author" : {
+      "username" : "Nizard_Bdl",
+      "profile_picture" : "http://pbs.twimg.com/profile_images/581953994098143232/vmPGSAx1_normal.jpg"
+    }
+  } ]
+}

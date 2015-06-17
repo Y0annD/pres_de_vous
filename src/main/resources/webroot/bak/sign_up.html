@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <title>Sign up</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="bower_components/webcomponentsjs/webcomponents.js">
+    </script>
+
+    <link rel="import" href="bower_components/font-roboto/roboto.html">
+    <link rel="import"
+          href="bower_components/core-header-panel/core-header-panel.html">
+    <link rel="import"
+          href="bower_components/core-toolbar/core-toolbar.html">
+    <link rel="import"
+            href="bower_components/core-input/core-input.html">
+    <link rel="import"
+          href="bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import"
+          href="bower_components/paper-input/paper-input.html">
+    <link rel="import"
+          href="bower_components/paper-elements/paper-elements.html">
+    <link rel=import"
+          href="bower_components/paper-button/paper-button.html">
+    <style>
+        html,body {
+            height: 100%;
+            margin: 0;
+            background-color: #E5E5E5;
+            font-family: 'RobotoDraft', sans-serif;
+        }
+        core-header-panel {
+            height: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        core-toolbar {
+            background: #03a9f4;
+            color: white;
+        }
+        #tabs {
+            width: 100%;
+            margin: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-transform: uppercase;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+        }
+        @media (min-width: 481px) {
+            #tabs {
+                width: 200px;
+            }
+            .container {
+                width: 400px;
+            }
+        }
+
+        #submit {
+            background: green;
+            color: yellow;
+        }
+    </style>
+
+</head>
+
+<body unresolved>
+
+<core-header-panel>
+
+    <core-toolbar>
+
+        <h1>Bienvenue</h1>
+    </core-toolbar>
+
+    <div class="container" layout>
+        Vous souhaitez voir les photos les plus proches de vous, inscrivez vous vite!
+
+        <form id="sign_up" action="mongo/SIGN_UP" method="post">
+            <fieldset name="personalInfo">
+
+
+            <paper-input-decorator label="Your Name" floatingLabel layout vertical > <input name="name" is="name" required></paper-input-decorator>
+            <paper-input-decorator label="Password"  floatingLabel layout vertical > <input name="password" type="password" is="password" required></paper-input-decorator>
+            <paper-input-decorator label="Email" floatingLabel layout vertical > <input name="email" is="email" type="email" required></paper-input-decorator><br/>
+                <paper-button id="send" raised layout vertical>Se lancer</paper-button>
+            </fieldset>
+        </form>
+    </div>
+
+</core-header-panel>
+
+<script>
+    var tabs = document.querySelector('paper-tabs');
+    var list = document.querySelector('post-list');
+
+    /*tabs.addEventListener('core-select', function() {
+        list.show = tabs.selected;
+    });*/
+
+    var form = document.getElementById("sign_up");
+    document.getElementById("send").addEventListener("click", function () {
+        form.submit();
+    });
+
+    function submit(){
+
+    }
+</script>
+</body>
+
+</html>

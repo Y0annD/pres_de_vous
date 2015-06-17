@@ -158,6 +158,13 @@ public class DBHelper extends Verticle {
         eb.registerHandler("DBHelper-auth", dbHandler);
     }
 
+
+    /**
+     * Crypt an uncrypted password in SHA-256
+     * Not very useful but better than clear password
+     * @param pass
+     * @return
+     */
     public static String cryptWithSHA(String pass){
         try {
             md = MessageDigest.getInstance("SHA-256");
